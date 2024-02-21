@@ -1,11 +1,7 @@
 {
   "index": "Einleitung",
-  "another": "Another Page",
-  "advanced": "Advanced (A Folder)",
-  "about": {
-    "title": "About",
-    "type": "page"
-  },
+  "was_ist": "Was ist TLJH mit AWS & bwCloud",
+  "Deployment_in_AWS": "Deployment in AWS",
   "contact": {
     "title": "Contact ↗",
     "type": "page",
