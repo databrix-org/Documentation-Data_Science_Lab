@@ -9,24 +9,18 @@ Voraussetzung für die Anfrage ist, dass Sie ein bwCloud-Konto haben. Mit einem 
 4.	Wählen Sie es, dass Sie ein Gruppen Projekt einrichten möchten, und schreiben Sie ein Ticket.
 ![](../../Images/Ab17.png)
 5.	Bitte geben Sie im Ticket eine kurze Beschreibung Ihres Projekts an. Und beantragen Sie die benötigten VMs unter Verwendung des folgenden Formats. Derzeit kann bwCloud die folgenden Flavors anbieten. (Siehe https://www.bw-cloud.org/de/bwcloud_scope/flavors)
-a) Ihre OpenStack User-UUID. /n
-b) Warum Sie die Quota benötigen. /n
-c) Die existierende ziel (Gruppen-)Projekt UUID. /n
-d) Welche Resourcen benötigen Sie. /n
-e) Wie lange Sie die Resourcen benötigen. /n
-f) Welche(s) Flavor(s) möchten Sie nutzen. /n
 ```js copy
 SUBJECT: NEW_QUOTA 
-MOTIVATION: TEXT 
-USER_UUID: UUID 
-PROJECT_UUID: UUID 
+MOTIVATION: TEXT (Warum Sie die Quota benötigen.)
+USER_UUID: UUID (Ihre OpenStack User-UUID.)
+PROJECT_UUID: UUID (Die existierende ziel (Gruppen-)Projekt UUID.)
 NUMBER_VM: NUMMER 
 RAM_GB: NUMMER 
 VCPU: NUMMER 
 MEMORY_GB: NUMMER 
-FLAVORS: NAME, NAME 
-SPECIAL_QUOTA: TEXT 
-CUT_OFF_DATE: DD.MM.YYYY
+FLAVORS: NAME, NAME (Welche(s) Flavor(s) möchten Sie nutzen.)
+SPECIAL_QUOTA: TEXT (Welche Resourcen benötigen Sie.)
+CUT_OFF_DATE: DD.MM.YYYY (Wie lange Sie die Resourcen benötigen.)
 ```
 6.	Sobald das Projekt genehmigt ist, sehen Sie Ihr neues Projekt in der oberen linken Ecke des Dashboards. In diesem Projekt haben Sie die Berechtigung, weitere VMs zu öffnen.
 ![](../../Images/Ab18.png)
