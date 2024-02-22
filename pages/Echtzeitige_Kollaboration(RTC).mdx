@@ -1,0 +1,42 @@
+# Echtzeitige kollaboration (RTC)
+
+In diesem Abschnitt wird beschrieben, wie die Kollaboration in Echtzeit in TLJH ermöglicht wird. In diesem Abschnitt wird nur beschrieben, wie die RTC konfiguriert wird, siehe „User Guide für Studierende“ für eine Einleitung in RTC. Voraussetzung dafür ist, dass Sie Konten für die Gruppenmitglieder und ein Konto mit dem Namen „shared-spaced“ anlegen.
+1.	SSH in Ihre VM oder öffnen einen Terminal von TLJH
+2.	Führen Sie den Befehl als Administrator aus.
+sudo –i
+3.	Öffnen Sie den Ordner, in dem die TLJH-Konfigurationsdatei gespeichert ist.
+cd /opt/tljh/config/jupyterhub_config.d
+4.	Öffnen Sie den nano-Editor und kopieren Sie den folgenden Konfigurationscode.
+c = get_config()  #noqa
+c.JupyterHub.port = 443
+c.JupyterHub.load_roles = []
+
+c.JupyterHub.load_groups = {
+    # collaborative accounts get added to this group
+    # so it's easy to see which accounts are collaboration accounts
+    "collaborative": [],
+}
+
+members = ['student-a','student-b']
+c.JupyterHub.load_groups['Collaborate-group'] = members
+
+c.JupyterHub.load_groups["collaborative"].append("shared-space")
+
+c.JupyterHub.load_roles.append(
+        {
+            "name": "collab-access",
+            "scopes": [
+                "access:servers!user=shared-space",
+                "admin:servers!user=shared-space",            ],
+            "groups": ['Collaborate-group'],
+        }
+    )
+def pre_spawn_hook(spawner):
+    group_names = {group.name for group in spawner.user.groups}
+    if "collaborative" in group_names:
+        spawner.log.info(f"Enabling RTC for user {spawner.user.name}")
+        spawner.args.append("--LabApp.collaborative=True")
+
+c.Spawner.pre_spawn_hook =  pre_spawn_hook
+5.	Reload TLJH
+sudo tljh-config reload hub

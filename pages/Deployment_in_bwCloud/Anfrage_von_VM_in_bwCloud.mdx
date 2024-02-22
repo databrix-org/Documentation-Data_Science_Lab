@@ -1,0 +1,30 @@
+# Anfrage VM-Instanzen
+
+Voraussetzung für die Anfrage ist, dass Sie ein bwCloud-Konto haben. Mit einem bwCloud-Konto können Sie nur eine VM mit einer vCPU und 1 GB RAM starten. Das ist für die meisten Projekte nicht genug. Daher müssen Sie bei den Mitarbeitern weitere Berechtigungen beantragen. Die folgenden Schritte helfen Ihnen bei der Anfrage nach weiteren VMs.
+1.	Anmelden bei bwClouds Dashborad https://portal.bw-cloud.org/auth/login/
+2.	Oben rechts auf dem Dashboard steht Ihre E-Mail-Adresse. Klicken Sie auf Ihre E-Mail-Adresse und wählen Sie Hilfe.
+![](../../Images/Ab15.png)
+3.	Wählen Sie Kontaktformular im Feld Frage und Antwort.
+![](../../Images/Ab16.png)
+4.	Wählen Sie es, dass Sie ein Gruppen Projekt einrichten möchten, und schreiben Sie ein Ticket.
+![](../../Images/Ab17.png)
+5.	Bitte geben Sie im Ticket eine kurze Beschreibung Ihres Projekts an. Und beantragen Sie die benötigten VMs unter Verwendung des folgenden Formats. Derzeit kann bwCloud die folgenden Flavors anbieten. (Siehe https://www.bw-cloud.org/de/bwcloud_scope/flavors)
+a) Ihre OpenStack User-UUID.
+b) Warum Sie die Quota benötigen.
+c) Die existierende ziel (Gruppen-)Projekt UUID.
+d) Welche Resourcen benötigen Sie.
+e) Wie lange Sie die Resourcen benötigen.
+f) Welche(s) Flavor(s) möchten Sie nutzen.
+SUBJECT: NEW_QUOTA 
+MOTIVATION: TEXT 
+USER_UUID: UUID 
+PROJECT_UUID: UUID 
+NUMBER_VM: NUMMER 
+RAM_GB: NUMMER 
+VCPU: NUMMER 
+MEMORY_GB: NUMMER 
+FLAVORS: NAME, NAME 
+SPECIAL_QUOTA: TEXT 
+CUT_OFF_DATE: DD.MM.YYYY
+6.	Sobald das Projekt genehmigt ist, sehen Sie Ihr neues Projekt in der oberen linken Ecke des Dashboards. In diesem Projekt haben Sie die Berechtigung, weitere VMs zu öffnen.
+![](../../Images/Ab18.png)
