@@ -1,16 +1,24 @@
 # Echtzeitige kollaboration (RTC)
 
 In diesem Abschnitt wird beschrieben, wie die Kollaboration in Echtzeit in TLJH ermöglicht wird. In diesem Abschnitt wird nur beschrieben, wie die RTC konfiguriert wird, siehe „User Guide für Studierende“ für eine Einleitung in RTC. Voraussetzung dafür ist, dass Sie Konten für die Gruppenmitglieder und ein Konto mit dem Namen „shared-spaced“ anlegen.
-1.	SSH in Ihre VM oder öffnen einen Terminal von TLJH
-2.	Führen Sie den Befehl als Administrator aus.
+
+import { Steps } from 'nextra/components'
+<Steps>
+### SSH in ihre VM
+SSH in Ihre VM oder öffnen einen Terminal von TLJH.
+
+Führen Sie den Befehl als Administrator aus.
 ```js copy
 sudo –i
 ```
-3.	Öffnen Sie den Ordner, in dem die TLJH-Konfigurationsdatei gespeichert ist.
+
+### Konfiguration RTC
+Öffnen Sie den Ordner, in dem die TLJH-Konfigurationsdatei gespeichert ist.
 ```js copy
 cd /opt/tljh/config/jupyterhub_config.d
 ```
-4.	Öffnen Sie den nano-Editor und kopieren Sie den folgenden Konfigurationscode.
+
+Öffnen Sie den nano-Editor und kopieren Sie den folgenden Konfigurationscode.
 ```js copy
 c = get_config()  #noqa
 c.JupyterHub.port = 443
@@ -44,7 +52,10 @@ def pre_spawn_hook(spawner):
 
 c.Spawner.pre_spawn_hook =  pre_spawn_hook
 ```
-5.	Reload TLJH
+
+### TLJH neustarten
+Reload TLJH
 ```js copy
 sudo tljh-config reload hub
 ```
+</Steps>
