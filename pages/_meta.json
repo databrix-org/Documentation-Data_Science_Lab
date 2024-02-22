@@ -2,6 +2,7 @@
   "index": "Einleitung",
   "was_ist": "Was ist TLJH mit AWS & bwCloud",
   "Deployment_in_AWS": "Deployment in AWS",
+  "Integration_in_Web":"Integration in databrix.org"
   "contact": {
     "title": "Contact ↗",
     "type": "page",
