@@ -28,10 +28,12 @@ Schauen Sie sich auf https://tljh.jupyter.org/en/latest/howto/admin/resource-est
 11.	Aus Kostengründen, wählen Sie eine 8-GB-Magnetfestplatte als Speicher.
 ![](../Images/Ab9.png)
 12.	Fügen Sie die folgenden Konfigurationsdaten ganz unten in die Benutzerdaten in den erweiterten Details ein.
+```js
 #!/bin/bash
 curl -L https://tljh.jupyter.org/bootstrap.py \
   | sudo python3 - \
 --admin Admin
+```
 13.	Klicken Sie unten rechts auf die orange Schaltfläche Instance starten.
 ![](../Images/Ab10.png)
 14.	Wählen Sie im Navigationsmenü ganz links in der EC2-Verwaltungskonsole die Option EC2-Dashboard. Sie können die soeben erstellte Instanz sehen. Klicken Sie im Bereich Reessourcen auf die Option Instanzen.
