@@ -4,7 +4,11 @@
   },
 
   "index": {
-           "title":"Data Science Lab"
+           "title":"Data Science Lab",
+           "display":"hidden",
+           "theme":{
+                   "layout":"raw"
+                   }
            },
 
   "TLJH":{
