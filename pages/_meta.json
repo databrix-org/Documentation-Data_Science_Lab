@@ -1,23 +1,11 @@
 {
-  "*": {
-    "type": "page"
-  },
-
-  "index": {
-    "title": "Data Science Lab"
-    },
+  "index": "Data Science Lab",
 
 
-  "TLJH": {
-    "title": "TLJH"
-  },
+  "TLJH":  "TLJH",
 
-  "JD": {
-    "title": "JD"
-    },
+  "JD":"JD",
 
-  "JDS": {
-    "title": "JDS"
-    }
+  "JDS":  "JDS"
   
 }
