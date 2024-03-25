@@ -2,9 +2,7 @@
 
   "index": {
            "title":"Data Science Lab",
-           "display": "hidden",
-           "theme": {
-            "layout": "raw"}
+           "display": "hidden"
            },
 
   "TLJH":{
