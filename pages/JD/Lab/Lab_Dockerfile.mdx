@@ -1,0 +1,34 @@
+# Dockerfile für Jupyterhub
+
+```js
+FROM jupyter/base-notebook
+
+# Copy environment files
+COPY requirements_dhbw-kurs.txt /opt/requirements_dhbw-kurs.txt
+COPY Assignment /home/jovyan/Assignment
+#COPY environment2.yml /tmp/environment2.yml
+
+# Set the default user
+ARG NB_USER
+USER ${NB_USER}
+# Install systemwide JupyterLab extension
+RUN pip install jupyter-collaboration \
+    && pip install matplotlib ipympl plotly virtualenv \
+    && jupyter lab build
+# Add more environment files as needed
+
+# Create Virtual environments
+#User root
+#SHELL ["/bin/bash", "-c"]
+
+RUN virtualenv /opt/conda/share/jupyter/lab/dhbw-kurs \
+    && source /opt/conda/share/jupyter/lab/dhbw-kurs/bin/activate \
+    && pip install -r /opt/requirements_dhbw-kurs.txt \
+    && python -m ipykernel install --user --name=DHBW-Kurs
+# Activate Virtual environments and install IPython kernels
+# Set the default user
+ARG NB_USER
+USER ${NB_USER}
+
+
+```

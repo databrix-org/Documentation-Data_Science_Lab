@@ -1,0 +1,4 @@
+{
+  "Hub_Dockerfile": "Dockerfile für Jupyterhub",
+  "Konfiguration_Hub":"Konfiguration Jupyterhub"
+}

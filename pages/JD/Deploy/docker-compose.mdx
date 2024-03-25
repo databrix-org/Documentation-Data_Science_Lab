@@ -1,0 +1,50 @@
+# Konfiguration Jupyterhub
+Verwenden Sie docker-compose.yml, um JDs Image zu ziehen und auszuführen.
+```js
+version: "3.8"
+services:
+
+  apache2:
+    image: apache2-shibd-dhbw:latest
+    volumes:
+      - "/etc/apache2/sites-enabled/000-default.conf:/etc/apache2/sites-enabled/000-default.conf"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/etc/letsencrypt/live/93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/fullchain.pem:/etc/letsencrypt>      - "/etc/letsencrypt/live/93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/privkey.pem:/etc/letsencrypt/l>     #- "/etc/hosts:/etc/hosts"
+      - "/etc/ssl/certs/dhparams.pem:/etc/ssl/certs/dhparams.pem"
+      - "/etc/shibboleth/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml"
+      - "/etc/shibboleth-ds/idpselect_config.js:/etc/shibboleth-ds/idpselect_config.js"
+      - "/var/run/shibboleth/shibd.sock:/var/run/shibboleth/shibd.sock"
+      - "/etc/shibboleth-ds/shibboleth-ds.conf:/etc/shibboleth-ds/shibboleth-ds.conf"
+    command: ["apache2ctl", "-D", "FOREGROUND"]
+    ports:
+      - "443:443"
+      - "80:80"
+
+    networks:
+      - jupyterhub_network
+
+  jupyterhub:
+    image: guyq1997/jupyterhub-dhbw:latest
+    container_name: jupyterhub
+
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py"
+
+    environment:
+      DOCKER_NETWORK_NAME: jupyterhub_network
+
+    networks:
+      - jupyterhub_network
+
+    command: >
+      jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
+
+
+networks:
+  jupyterhub_network:
+    name: jupyterhub_network
+    driver: bridge
+    external: True
+
+```

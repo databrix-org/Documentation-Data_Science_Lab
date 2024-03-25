@@ -1,0 +1,14 @@
+# Dockerfile für Jupyterhub
+```js
+FROM quay.io/jupyterhub/jupyterhub:latest
+
+COPY jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
+#COPY traefik.toml /srv/jupyterhub/traefik.toml
+
+RUN pip install \
+ dockerspawner \
+ jupyterhub-firstuseauthenticator \
+ oauthenticator \
+ jupyterhub-idle-culler
+
+```
