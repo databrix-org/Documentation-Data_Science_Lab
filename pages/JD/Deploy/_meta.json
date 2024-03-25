@@ -1,4 +1,4 @@
 {
-  "Hub_Dockerfile": "Dockerfile für Jupyterhub",
-  "Konfiguration_Hub":"Konfiguration Jupyterhub"
+  "Zertifikat": "Erstellung SSL-Zertifikat",
+  "docker-compose":"Deploy mit docker dompose"
 }

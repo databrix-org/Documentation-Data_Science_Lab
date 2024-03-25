@@ -1,0 +1,76 @@
+# Konfiguration Apache2
+000-default.conf wird verwendet, um Apache zu konfigurieren. Benutzeranfragen sollen erst zur Authentifizierung an SP weiterleitet werden, bevor Benutzer Jupyterhub besuchen.
+```js
+#Listen 80
+<VirtualHost *:80>
+  ServerName 93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org
+
+  Redirect / https://93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/
+</VirtualHost>
+
+#Listen 443
+<VirtualHost *:443>
+  ServerName 93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org
+
+  ServerSignature Off
+  SSLProxyEngine on
+  # Enable HTTP/2, if available
+  Protocols h2 http/1.1
+
+  # HTTP Strict Transport Security (mod_headers is required) (63072000 seconds)
+  Header always set Strict-Transport-Security "max-age=63072000"
+
+  # Configure SSL
+  SSLEngine on
+  SSLCertificateFile /etc/letsencrypt/live/93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/fullchain.pem
+  SSLCertificateKeyFile /etc/letsencrypt/live/93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/privkey.pem
+  SSLOpenSSLConfCmd DHParameters /etc/ssl/certs/dhparams.pem
+  # Intermediate configuration from SSL-config.mozilla.org (2022-03-03)
+  # Please note, that this configuration might be outdated - please update it accordingly using https://ssl-config.mozilla.>  SSLProtocol TLSv1.2
+  SSLCipherSuite          ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA>  SSLHonorCipherOrder     on
+  SSLSessionTickets       Off
+  SSLCompression          Off
+
+#----------------------Shibboleth-------------------------------
+  UseCanonicalName On
+  Include /etc/shibboleth-ds/shibboleth-ds.conf
+  Redirect seeother /shibboleth https://93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/Shibboleth.sso/Metada>  RedirectMatch /start-session$ /Shibboleth.sso/Login
+
+  <Location /Shibboleth.sso>
+    AuthType None
+    Require all granted
+  </Location>
+
+  <Location /shibboleth-sp>
+    AuthType None
+    Require all granted
+  </Location>
+
+  Alias /shibboleth-sp/main.css /usr/share/shibboleth/main.css
+#----------------------Jupyterhub-------------------------------
+  RewriteEngine On
+
+  RewriteCond %{HTTP:Connection} Upgrade [NC]
+  RewriteCond %{HTTP:Upgrade} websocket [NC]
+  RewriteRule /jupyterhub/(.*) ws://jupyterhub:8000/jupyterhub/$1 [P,L]
+  RewriteRule /jupyterhub/(.*) http://jupyterhub:8000/jupyterhub/$1 [P,L]
+
+  <Location /jupyterhub>
+
+    RequestHeader unset Accept-Encoding
+#    ProxyPass         http://jupyterhub:8000/jupyterhub
+#    ProxyPassReverse  http://jupyterhub:8000/jupyterhub
+
+    RewriteEngine On
+    ProxyPreserveHost on
+
+    AuthType shibboleth
+    ShibRequestSetting requireSession 1
+    Require valid-user
+    ShibUseHeaders On
+    RequestHeader set X-Remote-User %{REMOTE_USER}s
+    ProxyPass        http://jupyterhub:8000/jupyterhub
+    ProxyPassReverse http://jupyterhub:8000/jupyterhub
+  </Location>
+</VirtualHost>
+```
