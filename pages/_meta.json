@@ -10,7 +10,22 @@
       "layout": "raw"
     }
   },
+
   "TLJH": {
     "title": "TLJH"
+  },
+
+  "JD": {
+    "title": "JD",
+    "theme": {
+      "layout": "raw"
+    }
+  },
+
+  "JDS": {
+    "title": "JDS",
+    "theme": {
+      "layout": "raw"
+    }
   }
 }

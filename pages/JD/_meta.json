@@ -1,0 +1,13 @@
+{
+    "index": "Einleitung",
+    "was_ist": "Was ist TLJH mit AWS & bwCloud",
+    "Deployment_in_AWS": "Deployment in AWS",
+    "Deployment_in_bwCloud":"Deployment in bwCloud",
+    "Echtzeitige_Kollaboration":"Echtzeitige Kollaboration (RTC)",
+    "contact": {
+      "title": "Contact ↗",
+      "type": "page",
+      "href": "https://www.databrix.org/",
+      "newWindow": true
+    }
+  }
