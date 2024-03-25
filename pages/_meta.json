@@ -2,8 +2,14 @@
   "*": {
     "type": "page"
   },
-  
-  "index": "Data Science Lab",
+
+  "index": {
+          "title":"Data Science Lab",
+          "display":"hidden",
+          "theme":{
+                   "layout":"raw"
+                  }
+           },
 
   "TLJH":  "TLJH",
 
