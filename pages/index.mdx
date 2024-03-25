@@ -7,9 +7,41 @@ Databrix.org verfügt auch über ein Data Science Coding-Plattform (Data Science
 Data Science Lab sind momentan auf Basis bwCloud, da bwCloud derzeit kostenlos ist.
 
 # Distributions
-Es gibt drei Möglichkeiten, Data Science Lab in bwCloud einzusetzen:
+Es gibt drei Distributions, Data Science Lab in bwCloud einzusetzen:
 1.	The Littlest Jupyterhub (TLJH)
 2.	Jupyterhub im Docker Modus (JD)
 3.	Jupyterhub im Docker Swarm Modus (JDS)
 Jeder Einsatz hat seine eigenen Eigenschaften. Daher sollten für das jeweilige Anwendungsszenario unterschiedliche Bereitstellungsmethoden verwendet werden. 
 JD verwendet Docker, um eine schnelle Bereitstellung von Data Science Lab auf einer einzigen virtuellen Maschine (VM) zu ermöglichen. Im Gegensatz zu TLJH ist bei JD keine umfangreiche Konfiguration auf VM erforderlich. Durch die Verwendung eines bereits konfigurierten Docker-Images entfällt für Administratoren die Notwendigkeit, mühsame Konfigurationen und Installationen auf jeder VM zu wiederholen. Dieser Artikel dokumentiert, wie JD deployed werden kann. 
+
+
+---
+title: "Data Science Lab"
+---
+
+import Link from 'next/link'
+import cn from 'clsx'
+import { useState } from 'react'
+import { motion } from "framer-motion"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
+
+import { Features, Feature } from '../components/Features'
+
+<div className="home-content">
+  <div className="content-container">
+    <h1 className="headline">Data Science Lab <br className='sm:block hidden'/>DHBW Stuttgart</h1>
+    <p className="subtitle">DHBW Stuttgart bietet Data Science Kurs an, den Kursinhalt und Hausaufgaben finden Sie in databrix.org. 
+                            Studierenden lernen die Theorie online durch die Webseite. 
+                            Praktische Aufgaben und Übungen sind jedoch auch wichtig für Lernprozess. 
+                            Databrix.org verfügt auch über ein Data Science Coding-Plattform (Data Science Lab), welche mit Jupyterhub aufgebaut werden. 
+                            Data Science Lab sind momentan auf Basis bwCloud, da bwCloud derzeit kostenlos ist.</p>
+
+    <p className="subtitle">Es gibt drei Distributions, Data Science Lab in bwCloud einzusetzen:
+                            1.	<Link href="/TLJH">The Littlest Jupyterhub (TLJH)</Link>
+                            2.	Jupyterhub im Docker Modus (JD)
+                            3.	Jupyterhub im Docker Swarm Modus (JDS)
+                            Jeder Einsatz hat seine eigenen Eigenschaften. Daher sollten für das jeweilige Anwendungsszenario unterschiedliche Bereitstellungsmethoden verwendet werden. 
+                            JD verwendet Docker, um eine schnelle Bereitstellung von Data Science Lab auf einer einzigen virtuellen Maschine (VM) zu ermöglichen. Im Gegensatz zu TLJH ist bei JD keine umfangreiche Konfiguration auf VM erforderlich. Durch die Verwendung eines bereits konfigurierten Docker-Images entfällt für Administratoren die Notwendigkeit, mühsame Konfigurationen und Installationen auf jeder VM zu wiederholen. Dieser Artikel dokumentiert, wie JD deployed werden kann. 
+                            </p>
+</div>
