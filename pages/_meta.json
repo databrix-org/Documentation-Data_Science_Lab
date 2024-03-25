@@ -1,7 +1,8 @@
 {
 
   "index": {
-           "title":"Data Science Lab"
+           "title":"Data Science Lab",
+           "display": "hidden"
            },
 
   "TLJH":{
