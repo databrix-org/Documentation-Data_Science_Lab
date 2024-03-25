@@ -4,28 +4,20 @@
   },
 
   "index": {
-    "title": "Data Science Lab",
-    "display": "hidden",
-    "theme": {
-      "layout": "raw"
-    }
-  },
+    "title": "Data Science Lab"
+    },
+
 
   "TLJH": {
     "title": "TLJH"
   },
 
   "JD": {
-    "title": "JD",
-    "theme": {
-      "layout": "raw"
-    }
-  },
+    "title": "JD"
+    },
 
   "JDS": {
-    "title": "JDS",
-    "theme": {
-      "layout": "raw"
+    "title": "JDS"
     }
-  }
+  
 }
