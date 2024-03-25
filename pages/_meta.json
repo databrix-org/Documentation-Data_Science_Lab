@@ -1,4 +1,6 @@
-{
+{"*": {
+  "type": "page"
+},
 
   "index": {
            "title":"Data Science Lab",
