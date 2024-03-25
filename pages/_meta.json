@@ -1,6 +1,9 @@
 {
+  "*": {
+    "type": "page"
+  },
+  
   "index": "Data Science Lab",
-
 
   "TLJH":  "TLJH",
 
