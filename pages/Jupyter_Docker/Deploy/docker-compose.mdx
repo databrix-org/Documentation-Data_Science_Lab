@@ -5,7 +5,7 @@ version: "3.8"
 services:
 
   apache2:
-    image: apache2-shibd-dhbw:latest
+    image: guyq1997/apache2-shibd-dhbw:latest
     volumes:
       - "/etc/apache2/sites-enabled/000-default.conf:/etc/apache2/sites-enabled/000-default.conf"
       - "/var/run/docker.sock:/var/run/docker.sock"
