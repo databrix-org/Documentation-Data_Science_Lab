@@ -1,8 +1,10 @@
 # Technische Überblick
 JD verwendet Docker, um eine schnelle Bereitstellung von Data Science Lab auf einer einzigen virtuellen Maschine (VM) zu ermöglichen. Im Gegensatz zu TLJH ist bei JD keine umfangreiche Konfiguration auf VM erforderlich. Durch die Verwendung eines bereits konfigurierten Docker-Images entfällt für Administratoren die Notwendigkeit, mühsame Konfigurationen und Installationen auf jeder VM zu wiederholen. Dieser Artikel dokumentiert, wie JD deployed werden kann. 
 
+## Anwendungsszenarien
 Geeignete Anwendungsszenarien für den Einsatz von JD sind die an den baden-württembergischen Hochschulen eingerichteten Kurse. Solche Kurse haben oft mehrere Dutzend Teilnehmer und werden in Gruppen aufgeteilt. Jede Gruppe und jeder Teilnehmer muss die gleichen Aufgaben erledigen und die gleiche Programmierumgebung verwenden. Daher kann JD mit den konfigurierten Programmierumgebungen und den Aufgaben im Docker-Image die Bedürfnisse der Studierenden und Gruppen erfüllen.
 
+## Funktionsprinzip
 Jedes Team hat eine eigene VM. Wie in der Abbildung unten dargestellt, vier Sorten von Services werden auf dieser VM ausgeführt. 
 1.	Apache ist ein Proxy Service, er bearbeitet alle Request aus dem Internet.
 2.	Shibboleth Service Provider (SP) ist für die Authentifizierung von Benutzern.
