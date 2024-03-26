@@ -13,10 +13,6 @@
 
   "Jupyter_Docker":{
         "title":"Jupyter_Docker"
-       },
-
-  "Jupyter_Docker_Swarm":{
-         "title": "Jupyter_Docker_Swarm"
-        }
+       }
   
 }
