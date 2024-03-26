@@ -1,5 +1,6 @@
 # Erstellung SSL-Zertifikat
 Um die Daten in Jupyterhub sicherer zu machen, sollten wir über https auf sie zugreifen. Um https verwenden zu können, müssen wir das SSL-Zertifikat für die VM erstellen. Hier verwenden wir certbot und Letsencrypt, um das Zertifikat automatisch zu generieren.
+
 1．	sudo snap install --classic certbot
 2．	sudo ln -s /snap/bin/certbot /usr/bin/certbot
 3.	sudo certbot certonly –standalone

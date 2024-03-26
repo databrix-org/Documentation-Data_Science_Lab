@@ -1,5 +1,5 @@
 # Konfiguration Shibboleth
-shibbboleth.xml wird für die Kommunikation mit dem IdP zur Authentifizierung des Benutzers verwendet.
+**shibbboleth.xml** wird für die Kommunikation mit dem IdP zur Authentifizierung des Benutzers verwendet.
 
 ```js
 <SPConfig  xmlns="urn:mace:shibboleth:3.0:native:sp:config"
@@ -113,7 +113,7 @@ shibbboleth.xml wird für die Kommunikation mit dem IdP zur Authentifizierung de
 
 </SPConfig>
 ```
-idpselect_condig.js should be configured, that your VM is allow by Shibboleth IdP (in Shibboleth-ds).
+**idpselect_condig.js** (in Shibboleth-ds Odner) muss auch konfiguriert werden, damit VM von Shibboleth IdP erlaubt ist.
 Add this:
 ```js
 this.returnWhiteList = [ "^https:\/\/93eca700-b764-4621-ab7f-de0792aa31ab\.ma.bw-cloud-instance\.org\/Shibboleth\.sso\/>
