@@ -1,2 +1,20 @@
 # Shibboleth für Identity Management
-Shibboleth Service Provider (SP) ist ein Service für Verwaltung von Benutzern. Er wird auf einem Server deployed und kann Benutzer authentifizieren. Die Daten des Benutzers werden im Shibboleth Identity Provider (IdP) gespeichert. Es wird in der IT-Abteilung der DHBW eingesetzt. IdP und SP kommunizieren miteinander über bwIDM. bwIDM ist ein Benutzerverwaltungssystem. Die Studierendenkonten der DHBW werden zentral von der IT-Abteilung der DHBW verwaltet. Da die ersten Nutzer von Jupyterhub Studierende der DHBW sind, ist es praktisch, die Konten der Studierenden über den Shibboleth zu verwalten. SP und Jupyterhub sind zwei verschiedene Services, daher benötigen wir einen Reverse Proxy. Er leitet die Zugriffsanfrage des Benutzers zunächst an SP und nach der Authentifizierung an Jupyterhub weiter. Wir benutzen hier Apache als Reverse Proxy.
+
+Jupyterhub benötigt eine Service zur Benutzerauthentifizierung. 
+In der Regel reicht der Authenticator, der in Jupyterhub enthalten ist, in den meisten Fällen aus. 
+Aber an Hochschulen haben die Teilnehmer ihre eigenen Konten. 
+Um die Anmeldung der Teilnehmer zu erleichtern, muss Jupyterhub daher Shibboleth, das Benutzerverwaltungssystem der Hochschule, verwenden. 
+
+Shibboleth Service Provider (SP) ist eine Service für Authentifizierung von Benutzern. 
+Es muss auf einem Server deployed werden. Die Daten des Benutzers werden jedoch in einer separaten Service - Shibboleth Identity Provider (IdP) gespeichert. 
+Shibboleth IdP werden zentral von der IT-Abteilung der Hochschule verwaltet. 
+Die Kommunikation zwischen SP und IdP erfolgt über bwIDM (ein Benutzerauthtifikationssystem).
+
+Weil Shibboleth SP und Jupyterhub sind zwei verschiedene Services, die auf einen Server laufen müssen. 
+Daher benötigen wir einen Reverse Proxy (Z.B. Apache). 
+Er leitet die Requests des Benutzers zunächst an Shibboleth SP und nach der Authentifizierung an Jupyterhub weiter. 
+
+In diesem Abschnitt, werden folgende Akpekte beschrieben:
+1. Docker Image von Shibboleth SP und Apache
+2. Konfiguration Shibboleth SP
+3. Konfiguration Apache
