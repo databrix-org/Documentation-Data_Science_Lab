@@ -9,7 +9,7 @@ services:
     volumes:
       - "/etc/apache2/sites-enabled/000-default.conf:/etc/apache2/sites-enabled/000-default.conf"
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/etc/letsencrypt/live/93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/fullchain.pem:/etc/letsencrypt>      - "/etc/letsencrypt/live/93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/privkey.pem:/etc/letsencrypt/l>     #- "/etc/hosts:/etc/hosts"
+      - "/etc/letsencrypt/live/example.org/fullchain.pem:/etc/letsencrypt>      - "/etc/letsencrypt/live/93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/privkey.pem:/etc/letsencrypt/l>     #- "/etc/hosts:/etc/hosts"
       - "/etc/ssl/certs/dhparams.pem:/etc/ssl/certs/dhparams.pem"
       - "/etc/shibboleth/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml"
       - "/etc/shibboleth-ds/idpselect_config.js:/etc/shibboleth-ds/idpselect_config.js"
