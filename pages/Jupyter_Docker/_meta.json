@@ -1,5 +1,5 @@
 {
-    "indexjd": "Einleitung",
+    "index": "Einleitung",
     "Technische_Überblick": "Technische Überblick",
     "Shibboleth": "Shibboleth für Identity Management",
     "Hub": "Konfiguration Jupyterhub Image",
