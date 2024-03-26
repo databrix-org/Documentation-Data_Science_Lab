@@ -9,8 +9,8 @@ services:
     volumes:
       - "/etc/apache2/sites-enabled/000-default.conf:/etc/apache2/sites-enabled/000-default.conf"
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/etc/letsencrypt/live/example.org/fullchain.pem:/etc/letsencrypt>      
-      - "/etc/letsencrypt/live/example.org/privkey.pem:/etc/letsencrypt/l>     
+      - "/etc/letsencrypt/live/example.org/fullchain.pem:/etc/letsencrypt/live/example.org/fullchain.pem>      
+      - "/etc/letsencrypt/live/example.org/privkey.pem:/etc/letsencrypt/live/example.org/privkey.pem>     
       #- "/etc/hosts:/etc/hosts"
       - "/etc/ssl/certs/dhparams.pem:/etc/ssl/certs/dhparams.pem"
       - "/etc/shibboleth/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml"
