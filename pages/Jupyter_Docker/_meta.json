@@ -1,8 +1,8 @@
 {
     "index": "Einleitung",
     "Technische_Überblick": "Technische Überblick",
+    "Deploy":"Deployment in bwCloud",
     "Shibboleth": "Shibboleth SP für Identity Management",
     "Hub": "Konfiguration Jupyterhub Image",
-    "Lab":"Konfiguration Single User Server Image",
-    "Deploy":"Deployment in bwCloud"
+    "Lab":"Konfiguration Single User Server Image"
 }
