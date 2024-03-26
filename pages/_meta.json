@@ -15,8 +15,8 @@
         "title":"Jupyter_Docker"
        },
 
-  "JDS":{
-         "title": "JDS"
+  "Jupyter_Docker_Swarm":{
+         "title": "Jupyter_Docker_Swarm"
         }
   
 }
