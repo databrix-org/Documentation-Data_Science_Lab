@@ -47,8 +47,8 @@ class ShibbolethLoginHandler(BaseHandler):
 class ShibbolethLogoutHandler(BaseHandler):
     """Log a user out from JupyterHub by clearing their login cookie
     and then redirect to shibboleth logout url to clear shibboleth cookie."""
-    def get(self):
-        user = self.get_current_user()
+    async def get(self):
+        user = await self.get_current_user()
         if user:
             self.log.info("User logged out: %s", user.name)
             self.clear_login_cookie()
@@ -108,5 +108,6 @@ c.DockerSpawner.start_timeout = 120
 c.DockerSpawner.remove = False
 c.JupyterHub.authenticator_class = ShibbolethAuthenticator
 c.ShibbolethAuthenticator.headers = ["Givenname"]
+c.Authenticator.shibboleth_logout_url = "https://example.org/Shibboleth.sso/Logout"
 
 ```
