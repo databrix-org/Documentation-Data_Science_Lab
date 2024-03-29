@@ -1,8 +1,26 @@
 # Erstellung SSL-Zertifikat
-Um die Daten in Jupyterhub sicherer zu machen, sollten wir über https auf sie zugreifen. Um https verwenden zu können, müssen wir das SSL-Zertifikat für die VM erstellen. Hier verwenden wir certbot und Letsencrypt, um das Zertifikat automatisch zu generieren.
+Um die Daten in Jupyterhub sicherer zu machen, sollten wir über https auf sie zugreifen. 
+Um https verwenden zu können, müssen wir das SSL-Zertifikat für die VM erstellen. 
+Außerdem Shibboleth SP braucht auch ein Zertifikat um mit Shibboleth IdP zu kommunizieren.
+Hier verwenden wir certbot und Letsencrypt, um das Zertifikat automatisch zu generieren.
 
-1.	sudo snap install --classic certbot
-2.	sudo ln -s /snap/bin/certbot /usr/bin/certbot
-3.	sudo certbot certonly –standalone
-4.	openssl dhparam -out /etc/ssl/certs/dhparams.pem 2048
-
+1.  Launch eine VM mit Ubuntu 20.04/22.04 
+2.  SSH zu Ihre VM, wo JD eingesetzt wird. 
+3.	```js 
+    copy sudo snap install --classic certbot
+    ```
+4.	```js 
+    sudo ln -s /snap/bin/certbot /usr/bin/certbot
+    ```
+4.	```js 
+    sudo certbot certonly –standalone
+    ```
+5.	```js 
+    openssl dhparam -out /etc/ssl/certs/dhparams.pem 2048
+    ```
+6.  ```js 
+    shib-keygen -u _shibd -g _shibd -h $(hostname -f) -y 30 -e https://$(hostname -f)/shibboleth -n sp-signing -f
+    ```
+7.  ```js 
+    shib-keygen -u _shibd -g _shibd -h $(hostname -f) -y 30 -e https://$(hostname -f)/shibboleth -n sp-encrypt -f
+    ```

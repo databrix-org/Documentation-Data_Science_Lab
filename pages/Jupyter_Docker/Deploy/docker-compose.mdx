@@ -1,5 +1,8 @@
 # Konfiguration Jupyterhub
 Verwenden Sie **docker-compose.yml**, um JDs Image zu ziehen und auszuführen.
+Hier wird ein Beispiel **docker-compose.yml** dargestellt. 
+
+1. fullchain.pem
 ```js
 version: "3.8"
 services:
@@ -47,6 +50,14 @@ networks:
   jupyterhub_network:
     name: jupyterhub_network
     driver: bridge
-    external: True
+    #external: True
 
 ```
+
+In Volumes sehen Sie viele Dateien, die in docker network hinzugefügt werden müssen.
+Einige von denen sind Zertifikaten, welche Sie bereits generiert haben.
+Andere sind dann Konfigurationsdateien, welche Sie noch erstellen müssen:
+1. 000-default.conf
+2. shibboleth2.xml
+3. shibboleth-ds.conf
+4. jupyterhub_config.py (Optional)
