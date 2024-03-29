@@ -1,5 +1,16 @@
 # Deployment in bwCloud
 
-Wie in der Einleitung beschrieben, sollte für jede VM eine eigene JD eingesetzt werden. Je nach Anzahl der Teilnehmer und Gruppen sollte der Kursanbieter die Anzahl der Gruppen festlegen. Für einen Kurs mit dreißig Nutzern, die in drei Gruppen aufgeteilt sind, wären beispielsweise zehn VMs erforderlich. Je nach den für die Aufgabe erforderlichen Rechenressourcen sollte eine VM mit vier CPUs und 32 GB RAM ausgewählt werden. Die JD sollte dann auf der VM aus dem Docker-Image bereitgestellt werden. Der Einsatz ist ein zweistufiger Prozess:
+Die JD sollte auf eine VM mit docker-compose.yml Datei und andere Konfigurationsdateien eingesetzt werden. Der Einsatz ist ein zweistufiger Prozess:
+
 1.	SSL Zertifikat erstellen
 2.	Docker-compose.yml laufen
+
+import { Callout } from 'nextra/components'
+ 
+<Callout type="info" emoji="ℹ️">
+Bemerkung:
+Wie in der Einleitung beschrieben, sollte für eine VM nur eine JD eingesetzt werden. 
+Je nach Anzahl der Teilnehmer sollte der Kursanbieter die Anzahl der Gruppen festlegen. Jede Gruppe verwendet dann eine JD (eine VM). 
+Z.B. für einen Kurs mit dreißig Nutzern, die in zehn Gruppen aufgeteilt sind, wären beispielsweise zehn VMs erforderlich.
+Je nach den für die Aufgabe erforderlichen Rechenressourcen sollte die Größe der VM ausgewählt werden. 
+</Callout>
