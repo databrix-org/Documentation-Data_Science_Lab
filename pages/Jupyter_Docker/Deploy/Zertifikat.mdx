@@ -6,21 +6,21 @@ Hier verwenden wir certbot und Letsencrypt, um das Zertifikat automatisch zu gen
 
 1.  Launch eine VM mit Ubuntu 20.04/22.04 
 2.  SSH zu Ihre VM, wo JD eingesetzt wird. 
-3.	```js 
-    copy sudo snap install --classic certbot
+3.	```js copy
+    sudo snap install --classic certbot
     ```
-4.	```js 
+4.	```js copy
     sudo ln -s /snap/bin/certbot /usr/bin/certbot
     ```
-4.	```js 
+4.	```js copy
     sudo certbot certonly –standalone
     ```
-5.	```js 
+5.	```js copy
     openssl dhparam -out /etc/ssl/certs/dhparams.pem 2048
     ```
-6.  ```js 
+6.  ```js copy
     shib-keygen -u _shibd -g _shibd -h $(hostname -f) -y 30 -e https://$(hostname -f)/shibboleth -n sp-signing -f
     ```
-7.  ```js 
+7.  ```js copy
     shib-keygen -u _shibd -g _shibd -h $(hostname -f) -y 30 -e https://$(hostname -f)/shibboleth -n sp-encrypt -f
     ```
