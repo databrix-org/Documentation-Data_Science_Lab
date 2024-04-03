@@ -26,15 +26,17 @@
   SSLCertificateKeyFile /etc/letsencrypt/live/example/privkey.pem
   SSLOpenSSLConfCmd DHParameters /etc/ssl/certs/dhparams.pem
   # Intermediate configuration from SSL-config.mozilla.org (2022-03-03)
-  # Please note, that this configuration might be outdated - please update it accordingly using https://ssl-config.mozilla.>  SSLProtocol TLSv1.2
-  SSLCipherSuite          ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA>  SSLHonorCipherOrder     on
-  SSLSessionTickets       Off
-  SSLCompression          Off
+  # Please note, that this configuration might be outdated - please update it accordingly using https://ssl-config.mozilla
+  SSLProtocol             all -SSLv3 -TLSv1 -TLSv1.1
+  SSLCipherSuite          ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+  SSLHonorCipherOrder     off
+  SSLSessionTickets       off
 
 #----------------------Shibboleth-------------------------------
   UseCanonicalName On
   Include /etc/shibboleth-ds/shibboleth-ds.conf
-  Redirect seeother /shibboleth https://example/Shibboleth.sso/Metada>  RedirectMatch /start-session$ /Shibboleth.sso/Login
+  Redirect seeother /shibboleth https://example/Shibboleth.sso/Metadata
+  RedirectMatch /start-session$ /Shibboleth.sso/Login
 
   <Location /Shibboleth.sso>
     AuthType None
