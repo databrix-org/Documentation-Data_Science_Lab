@@ -3,14 +3,14 @@
 ```js
 #Listen 80
 <VirtualHost *:80>
-  ServerName 93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org
+  ServerName example.org
 
-  Redirect / https://93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/
+  Redirect / https://example/
 </VirtualHost>
 
 #Listen 443
 <VirtualHost *:443>
-  ServerName 93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org
+  ServerName example
 
   ServerSignature Off
   SSLProxyEngine on
@@ -22,8 +22,8 @@
 
   # Configure SSL
   SSLEngine on
-  SSLCertificateFile /etc/letsencrypt/live/93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/fullchain.pem
-  SSLCertificateKeyFile /etc/letsencrypt/live/93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/privkey.pem
+  SSLCertificateFile /etc/letsencrypt/live/example/fullchain.pem
+  SSLCertificateKeyFile /etc/letsencrypt/live/example/privkey.pem
   SSLOpenSSLConfCmd DHParameters /etc/ssl/certs/dhparams.pem
   # Intermediate configuration from SSL-config.mozilla.org (2022-03-03)
   # Please note, that this configuration might be outdated - please update it accordingly using https://ssl-config.mozilla.>  SSLProtocol TLSv1.2
@@ -34,7 +34,7 @@
 #----------------------Shibboleth-------------------------------
   UseCanonicalName On
   Include /etc/shibboleth-ds/shibboleth-ds.conf
-  Redirect seeother /shibboleth https://93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/Shibboleth.sso/Metada>  RedirectMatch /start-session$ /Shibboleth.sso/Login
+  Redirect seeother /shibboleth https://example/Shibboleth.sso/Metada>  RedirectMatch /start-session$ /Shibboleth.sso/Login
 
   <Location /Shibboleth.sso>
     AuthType None

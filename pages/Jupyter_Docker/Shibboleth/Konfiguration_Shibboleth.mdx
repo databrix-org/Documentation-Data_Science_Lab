@@ -14,8 +14,8 @@
     -->
 
     <!-- The ApplicationDefaults element is where most of Shibboleth's SAML bits are defined. -->
-    <ApplicationDefaults entityID="https://93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/shibboleth"
-        homeURL="https://93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/Shibboleth.sso/Session"
+    <ApplicationDefaults entityID="https://example/shibboleth"
+        homeURL="https://example/Shibboleth.sso/Session"
         REMOTE_USER="persistent-id uniqueID Givenname Mail"
         cipherSuites="DEFAULT:!EXP:!LOW:!aNULL:!eNULL:!DES:!IDEA:!SEED:!RC4:!3DES:!kRSA:!SSLv2:!SSLv3:!TLSv1:!TLSv1.1">
 
@@ -99,7 +99,7 @@
 
         <!-- Simple file-based resolvers for separate signing/encryption keys. -->
         <CredentialResolver type="File" use="signing"
-            key="/etc/letsencrypt/live/93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org/privkey.pem" certifica>        <!-- <CredentialResolver type="File" use="encryption"
+            key="/etc/letsencrypt/live/example/privkey.pem" certifica>        <!-- <CredentialResolver type="File" use="encryption"
             key="sp-encrypt-key.pem" certificate="sp-encrypt-cert.pem"/>
         -->
 
@@ -116,5 +116,5 @@
 **idpselect_condig.js** (in Shibboleth-ds Odner) muss auch konfiguriert werden, damit VM von Shibboleth IdP erlaubt ist.
 Add this:
 ```js
-this.returnWhiteList = [ "^https:\/\/93eca700-b764-4621-ab7f-de0792aa31ab\.ma.bw-cloud-instance\.org\/Shibboleth\.sso\/>
+this.returnWhiteList = [ "^https:\/\/exampl\.ma.bw-cloud-instance\.org\/Shibboleth\.sso\/>
 ```
