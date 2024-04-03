@@ -2,7 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@types/node': 18.11.10
-  next: ^14.1.4
+  next: latest
   nextra: latest
   nextra-theme-docs: latest
   react: ^18.2.0
