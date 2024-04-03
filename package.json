@@ -1,7 +1,7 @@
 {
-  "name": "nextra-docs-template",
+  "name": "@fyralabs/devdocs",
   "version": "0.0.1",
-  "description": "Nextra docs template",
+  "description": "The Fyra Labs developer documentation",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,23 +9,30 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shuding/nextra-docs-template.git"
+    "url": "git+https://github.com/FyraLabs/devdocs"
   },
-  "author": "Shu Ding <g@shud.in>",
+  "author": "Lleyton Gray <lleyton@fyralabs.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/shuding/nextra-docs-template/issues"
+    "url": "https://github.com/FyraLabs/devdocs/issues"
   },
-  "homepage": "https://github.com/shuding/nextra-docs-template#readme",
+  "homepage": "https://developer.fyralabs.com",
   "dependencies": {
-    "next": "^13.2.4",
-    "nextra": "latest",
-    "nextra-theme-docs": "latest",
+    "next": "^14.0.2",
+    "nextra": "^2.13.2",
+    "nextra-theme-docs": "^2.13.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "sharp": "^0.32.6"
   },
   "devDependencies": {
-    "@types/node": "18.11.10",
-    "typescript": "^4.9.3"
+    "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@types/node": "20.9.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.2.2"
   }
 }
