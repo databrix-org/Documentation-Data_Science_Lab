@@ -1,7 +1,7 @@
 {
-  "name": "@fyralabs/devdocs",
+  "name": "nextra-docs-template",
   "version": "0.0.1",
-  "description": "The Fyra Labs developer documentation",
+  "description": "Nextra docs template",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FyraLabs/devdocs"
+    "url": "git+https://github.com/shuding/nextra-docs-template.git"
   },
-  "author": "Lleyton Gray <lleyton@fyralabs.com>",
+  "author": "Shu Ding <g@shud.in>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/FyraLabs/devdocs/issues"
+    "url": "https://github.com/shuding/nextra-docs-template/issues"
   },
-  "homepage": "https://developer.fyralabs.com",
+  "homepage": "https://github.com/shuding/nextra-docs-template#readme",
   "dependencies": {
     "next": "^14.0.2",
     "nextra": "^2.13.2",
