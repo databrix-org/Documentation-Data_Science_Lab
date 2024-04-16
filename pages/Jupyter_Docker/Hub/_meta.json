@@ -1,4 +1,3 @@
 {
-  "Hub_Dockerfile": "Dockerfile für Jupyterhub",
-  "Konfiguration_Hub":"Konfiguration Jupyterhub"
+  "Hub_Dockerfile": "Jupyterhub Image"
 }

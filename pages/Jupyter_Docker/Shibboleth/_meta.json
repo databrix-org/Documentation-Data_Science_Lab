@@ -1,5 +1,3 @@
 {
-  "shibd_apache_image": "Shibboleth SP und Apache Docker Image",
-  "Konfiguration_Shibboleth":"Konfiguration Shibboleth SP",
-  "Konfiguration_Apache2":"Konfiguration Apache2"
+  "shibd_apache_image": "Shibboleth SP und Apache Docker Image"
 }
