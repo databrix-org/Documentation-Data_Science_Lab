@@ -12,15 +12,21 @@ services:
     image: guyq1997/apache2-shibd-dhbw:latest
     volumes:
       - "/etc/apache2/sites-enabled/000-default.conf:/etc/apache2/sites-enabled/000-default.conf"
+      - "/var/www/html:/var/www/html"
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/etc/letsencrypt/live/example.org/fullchain.pem:/etc/letsencrypt/live/example.org/fullchain.pem>      
-      - "/etc/letsencrypt/live/example.org/privkey.pem:/etc/letsencrypt/live/example.org/privkey.pem>     
+      - "/etc/letsencrypt/live/example.org/fullchain.pem:/etc/letsencrypt/live/example.org/fullchain.pem"      
+      - "/etc/letsencrypt/live/example.org/privkey.pem:/etc/letsencrypt/live/example.org/privkey.pem"     
       #- "/etc/hosts:/etc/hosts"
       - "/etc/ssl/certs/dhparams.pem:/etc/ssl/certs/dhparams.pem"
       - "/etc/shibboleth/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml"
       - "/etc/shibboleth-ds/idpselect_config.js:/etc/shibboleth-ds/idpselect_config.js"
       - "/var/run/shibboleth/shibd.sock:/var/run/shibboleth/shibd.sock"
       - "/etc/shibboleth-ds/shibboleth-ds.conf:/etc/shibboleth-ds/shibboleth-ds.conf"
+      - "/etc/shibboleth/sp-encrypt-key.pem:/etc/shibboleth/sp-encrypt-key.pem"
+      - "/etc/shibboleth/sp-encrypt-cert.pem:/etc/shibboleth/sp-encrypt-cert.pem"
+      - "/etc/shibboleth/sp-signing-key.pem:/etc/shibboleth/sp-signing-key.pem"
+      - "/etc/shibboleth/sp-signing-cert.pem:/etc/shibboleth/sp-signing-cert.pem"
+
     command: ["apache2ctl", "-D", "FOREGROUND"]
     ports:
       - "443:443"
@@ -36,7 +42,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py"
-
+#      - "./nbgrader_config.py:/etc/jupyter/nbgrader_config.py"
     environment:
       DOCKER_NETWORK_NAME: jupyterhub_network
 
@@ -46,12 +52,21 @@ services:
     command: >
       jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
 
+  databrix:
+    image: streamify/databrix
+
+    ports:
+      - "4001:3000"
+    volumes:
+#      - .:/app
+#      - /app/node_modules
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
 networks:
   jupyterhub_network:
     name: jupyterhub_network
     driver: bridge
-    #external: True
+    external: True
 
 ```
 

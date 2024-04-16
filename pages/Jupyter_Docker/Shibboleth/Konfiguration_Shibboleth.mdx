@@ -14,8 +14,8 @@
     -->
 
     <!-- The ApplicationDefaults element is where most of Shibboleth's SAML bits are defined. -->
-    <ApplicationDefaults entityID="https://example/shibboleth"
-        homeURL="https://example/Shibboleth.sso/Session"
+    <ApplicationDefaults entityID="https://example.org/shibboleth"
+        homeURL="https://example.org/Shibboleth.sso/Session"
         REMOTE_USER="persistent-id uniqueID Givenname Mail"
         cipherSuites="DEFAULT:!EXP:!LOW:!aNULL:!eNULL:!DES:!IDEA:!SEED:!RC4:!3DES:!kRSA:!SSLv2:!SSLv3:!TLSv1:!TLSv1.1">
 
@@ -37,10 +37,12 @@
             You can also override entityID on /Login query string, or in RequestMap/htaccess.
             -->
             <SSO entityID="https://saml.dhbw-stuttgart.de/idp/shibboleth"
-                 discoveryProtocol="SAMLDS" discoveryURL="https://93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance>              SAML2
+                 discoveryProtocol="SAMLDS" discoveryURL="https://example.org/shibboleth-ds/index.html">
+              SAML2
             </SSO>
             <!--
-            <SSO discoveryProtocol="SAMLDS" discoveryURL="https://93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance>               SAML2
+            <SSO discoveryProtocol="SAMLDS" discoveryURL="https://example.org/shibboleth-ds/index.html">
+              SAML2
             </SSO>
             -->
             <!-- SAML and local-only logout. -->
@@ -99,9 +101,11 @@
 
         <!-- Simple file-based resolvers for separate signing/encryption keys. -->
         <CredentialResolver type="File" use="signing"
-            key="/etc/letsencrypt/live/example/privkey.pem" certifica>        <!-- <CredentialResolver type="File" use="encryption"
+            key="sp-signing-key.pem" certifica="sp-signing-cert.pem"/>        
+        
+        <CredentialResolver type="File" use="encryption"
             key="sp-encrypt-key.pem" certificate="sp-encrypt-cert.pem"/>
-        -->
+    
 
     </ApplicationDefaults>
 

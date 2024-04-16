@@ -3,17 +3,25 @@
 ```js
 FROM jupyter/base-notebook
 
+ARG NB_USER
+USER ${NB_USER}
+
 # Copy environment files
 COPY requirements_dhbw-kurs.txt /opt/requirements_dhbw-kurs.txt
 COPY Assignment /home/jovyan/Assignment
-#COPY environment2.yml /tmp/environment2.yml
+COPY info-all.json /efs/user-info/info-all.json
+
+USER root
+COPY nbgrader_config.py /etc/jupyter/nbgrader_config.py
+RUN chmod -R a+rwX /home/jovyan/Assignment
 
 # Set the default user
 ARG NB_USER
 USER ${NB_USER}
 # Install systemwide JupyterLab extension
-RUN pip install jupyter-collaboration \
+RUN pip install jupyter-collaboration nbgrader ngshare_exchange\
     && pip install matplotlib ipympl plotly virtualenv \
+    && pip install 'jupyterlab>=4.1.0,<5.0.0a0' jupyterlab-lsp \
     && jupyter lab build
 # Add more environment files as needed
 
@@ -26,9 +34,5 @@ RUN virtualenv /opt/conda/share/jupyter/lab/dhbw-kurs \
     && pip install -r /opt/requirements_dhbw-kurs.txt \
     && python -m ipykernel install --user --name=DHBW-Kurs
 # Activate Virtual environments and install IPython kernels
-# Set the default user
-ARG NB_USER
-USER ${NB_USER}
-
 
 ```

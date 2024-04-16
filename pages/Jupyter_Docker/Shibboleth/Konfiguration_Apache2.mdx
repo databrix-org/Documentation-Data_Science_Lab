@@ -22,8 +22,8 @@
 
   # Configure SSL
   SSLEngine on
-  SSLCertificateFile /etc/letsencrypt/live/example/fullchain.pem
-  SSLCertificateKeyFile /etc/letsencrypt/live/example/privkey.pem
+  SSLCertificateFile /etc/letsencrypt/live/example.org/fullchain.pem
+  SSLCertificateKeyFile /etc/letsencrypt/live/example.org/privkey.pem
   SSLOpenSSLConfCmd DHParameters /etc/ssl/certs/dhparams.pem
   # Intermediate configuration from SSL-config.mozilla.org (2022-03-03)
   # Please note, that this configuration might be outdated - please update it accordingly using https://ssl-config.mozilla
@@ -32,10 +32,11 @@
   SSLHonorCipherOrder     off
   SSLSessionTickets       off
 
+  AllowEncodedSlashes On
 #----------------------Shibboleth-------------------------------
   UseCanonicalName On
   Include /etc/shibboleth-ds/shibboleth-ds.conf
-  Redirect seeother /shibboleth https://example/Shibboleth.sso/Metadata
+  Redirect seeother /shibboleth https://example.org/Shibboleth.sso/Metadata
   RedirectMatch /start-session$ /Shibboleth.sso/Login
 
   <Location /Shibboleth.sso>
@@ -50,27 +51,36 @@
 
   Alias /shibboleth-sp/main.css /usr/share/shibboleth/main.css
 #----------------------Jupyterhub-------------------------------
+   <Location />
+    AuthType shibboleth
+    Require shibboleth
+  </Location>
+
+  <Location /home>
+    ProxyPreserveHost on
+    ShibRequireSession On
+    Require valid-user
+    ShibUseHeaders On
+#    ProxyPass        http://databrix:3000
+#    ProxyPassReverse http://databrix:3000
+  </Location>
+  
   RewriteEngine On
 
   RewriteCond %{HTTP:Connection} Upgrade [NC]
   RewriteCond %{HTTP:Upgrade} websocket [NC]
   RewriteRule /jupyterhub/(.*) ws://jupyterhub:8000/jupyterhub/$1 [P,L]
   RewriteRule /jupyterhub/(.*) http://jupyterhub:8000/jupyterhub/$1 [P,L]
+#  RewriteRule /home/(.*) ws://databrix:3000/$1 [P,L]
+#  RewriteRule /home/(.*) http://databrix:3000/$1 [P,L]
 
   <Location /jupyterhub>
-
-    RequestHeader unset Accept-Encoding
-#    ProxyPass         http://jupyterhub:8000/jupyterhub
-#    ProxyPassReverse  http://jupyterhub:8000/jupyterhub
-
     RewriteEngine On
     ProxyPreserveHost on
 
-    AuthType shibboleth
-    ShibRequestSetting requireSession 1
-    Require valid-user
+    ShibRequestSetting requireSession off
     ShibUseHeaders On
-    RequestHeader set X-Remote-User %{REMOTE_USER}s
+
     ProxyPass        http://jupyterhub:8000/jupyterhub
     ProxyPassReverse http://jupyterhub:8000/jupyterhub
   </Location>

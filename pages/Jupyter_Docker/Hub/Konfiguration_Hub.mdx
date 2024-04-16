@@ -1,6 +1,7 @@
 # Konfiguration Jupyterhub
 Fügen Sie den folgenden Code in die Datei **jupyterhub_config.py** ein.
 ```js
+import sys
 import os
 from dockerspawner import DockerSpawner
 from jupyterhub.auth import Authenticator, LocalAuthenticator
@@ -109,5 +110,57 @@ c.DockerSpawner.remove = False
 c.JupyterHub.authenticator_class = ShibbolethAuthenticator
 c.ShibbolethAuthenticator.headers = ["Givenname"]
 c.Authenticator.shibboleth_logout_url = "https://example.org/Shibboleth.sso/Logout"
+c.JupyterHub.admin_access = True
+c.Authenticator.admin_users = {'yuqiang'}
 
+c.JupyterHub.load_groups = {
+    # collaborative accounts get added to this group
+    # so it's easy to see which accounts are collaboration accounts
+    'gruppe1': [],
+    'gruppe2' : []
+}
+members_gruppe1 = ['tin','udo','jannik']
+c.JupyterHub.load_groups['gruppe1'] = members_gruppe1
+
+
+c.JupyterHub.load_roles.append(
+        {
+            "name": "collab_gruppe",
+            "scopes": [
+                "access:servers!user=shared_space1",
+                "admin:servers!user=shared_space1"],
+            "groups": ["gruppe1"],
+        }
+    )
+def pre_spawn_hook(spawner):
+        spawner.log.info(f"Enabling RTC for user {spawner.user.name}")
+        spawner.args.append("--LabApp.collaborative=True")
+c.Spawner.pre_spawn_hook =  pre_spawn_hook
+
+c.JupyterHub.load_roles = [
+    {
+        "name": "jupyterhub-idle-culler-role",
+        "scopes": [
+            "list:users",
+            "read:users:activity",
+            "read:servers",
+            "delete:servers",
+            # "admin:users", # if using --cull-users
+        ],
+        # assignment of role's permissions to:
+        "services": ["jupyterhub-idle-culler-service"],
+    }
+]
+
+c.JupyterHub.services = [
+    {
+        "name": "jupyterhub-idle-culler-service",
+        "command": [
+            sys.executable,
+            "-m", "jupyterhub_idle_culler",
+            "--timeout=300",
+        ],
+        # "admin": True,
+    }
+]
 ```
