@@ -9,7 +9,7 @@ from jupyterhub.handlers import BaseHandler
 from traitlets import Unicode, List, validate, TraitError
 from tornado import web
 
-class ShibbolethLoginHandler(BaseHandler):
+class ShibbolethLoginHandler(BaseHandler): 
 
     def _get_user_data_from_request(self):
         """Get shibboleth attributes (user data) from request headers."""
