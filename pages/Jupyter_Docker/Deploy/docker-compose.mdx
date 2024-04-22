@@ -42,7 +42,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py"
-#     - "/opt/jupyterhub_docker/exchange_data:/tmp/exchange:rw"
+      - "/opt/jupyterhub_docker/exchange_data:/tmp/exchange:rw"
     environment:
       DOCKER_NETWORK_NAME: jupyterhub_network
 
