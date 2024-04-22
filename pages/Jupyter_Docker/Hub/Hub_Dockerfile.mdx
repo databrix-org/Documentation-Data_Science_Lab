@@ -3,7 +3,7 @@
 FROM quay.io/jupyterhub/jupyterhub:latest
 
 COPY jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
-COPY nbgrader_config.py /etc/jupyter/nbgrader_config.py
+
 
 RUN pip install \
  dockerspawner \
@@ -11,9 +11,6 @@ RUN pip install \
  jhub_remote_user_authenticator \
  jupyterhub-idle-culler \
 # jhub_shibboleth_auth \
- nbgrader \
- ngshare \
- ngshare_exchange \
  oauthenticator \
  jupyterhub-idle-culler
 

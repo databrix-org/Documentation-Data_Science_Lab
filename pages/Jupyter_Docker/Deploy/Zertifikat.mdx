@@ -6,6 +6,11 @@ Hier verwenden wir certbot und Letsencrypt, um das Zertifikat automatisch zu gen
 
 1.  Launch eine VM mit Ubuntu 20.04/22.04 
 2.  SSH zu Ihre VM, wo JD eingesetzt wird. 
+3.  ```js copy
+    mkdir /opt/jupyterhub_docker
+    cd /opt/jupyterhub_docker
+    mkdir exchange_data
+    ```
 3.	```js copy
     sudo snap install --classic certbot
     ```

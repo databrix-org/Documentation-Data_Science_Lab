@@ -8,18 +8,21 @@ USER ${NB_USER}
 
 # Copy environment files
 COPY requirements_dhbw-kurs.txt /opt/requirements_dhbw-kurs.txt
-COPY Assignment /home/jovyan/Assignment
+#COPY Assignment /home/jovyan/Assignment
 COPY info-all.json /efs/user-info/info-all.json
+COPY nbgrader_config.py /etc/jupyter/nbgrader_config.py
+COPY nbgrader_directory.py /home/jovyan/.jupyter/nbgrader_config.py
 
 USER root
-COPY nbgrader_config.py /etc/jupyter/nbgrader_config.py
-RUN chmod -R a+rwX /home/jovyan/Assignment
+RUN chmod ugo+rw /etc/jupyter
+RUN rm -rf /tmp/exchange
+RUN mkdir /tmp/exchange
 
 # Set the default user
 ARG NB_USER
 USER ${NB_USER}
 # Install systemwide JupyterLab extension
-RUN pip install jupyter-collaboration nbgrader ngshare_exchange\
+RUN pip install jupyter-collaboration nbgrader \
     && pip install matplotlib ipympl plotly virtualenv \
     && pip install 'jupyterlab>=4.1.0,<5.0.0a0' jupyterlab-lsp \
     && jupyter lab build
@@ -35,4 +38,7 @@ RUN virtualenv /opt/conda/share/jupyter/lab/dhbw-kurs \
     && python -m ipykernel install --user --name=DHBW-Kurs
 # Activate Virtual environments and install IPython kernels
 
+RUN jupyter labextension disable nbgrader:create-assignment \
+    && jupyter labextension disable nbgrader:formgrader \
+    && jupyter labextension disable nbgrader:course-list
 ```
