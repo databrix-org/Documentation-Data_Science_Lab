@@ -61,8 +61,8 @@
     ShibRequireSession On
     Require valid-user
     ShibUseHeaders On
-#    ProxyPass        http://databrix:3000
-#    ProxyPassReverse http://databrix:3000
+    ProxyPass        http://databrix:3000/home
+    ProxyPassReverse http://databrix:3000/home
   </Location>
   
   RewriteEngine On
@@ -71,8 +71,8 @@
   RewriteCond %{HTTP:Upgrade} websocket [NC]
   RewriteRule /jupyterhub/(.*) ws://jupyterhub:8000/jupyterhub/$1 [P,L]
   RewriteRule /jupyterhub/(.*) http://jupyterhub:8000/jupyterhub/$1 [P,L]
-#  RewriteRule /home/(.*) ws://databrix:3000/$1 [P,L]
-#  RewriteRule /home/(.*) http://databrix:3000/$1 [P,L]
+  RewriteRule /home/(.*) ws://databrix:3000/home/$1 [P,L]
+  RewriteRule /home/(.*) http://databrix:3000/home/$1 [P,L]
 
   <Location /jupyterhub>
     RewriteEngine On
