@@ -93,7 +93,33 @@ def _valid_headers(self, proposal):
             (r'/logout', ShibbolethLogoutHandler),
         ]
 
-Dozenten = ['yuqiang']
+c.JupyterHub.load_roles = []
+
+c.JupyterHub.load_groups = {
+    # collaborative accounts get added to this group
+    # so it's easy to see which accounts are collaboration accounts
+    "collaborative": [],
+}
+
+c.JupyterHub.load_groups['gruppe1'] = ['yuqiang','tin','udo','jannik']
+
+c.JupyterHub.load_groups["collaborative"].append('shared_space1')
+
+
+c.JupyterHub.load_roles.append(
+    {
+        "name": "collab-access",
+        "scopes": [
+            "access:servers!user=shared_space1",
+            "admin:servers!user=shared_space1",
+            "admin-ui",
+            "list:users!user=shared_space1",
+        ],
+        "groups": ['gruppe1'],
+    }
+)
+
+Dozenten = ['yuqiang','jannik']
 
 def pre_spawn_hook(spawner):
         spawner.log.info(f"Enabling RTC for user {spawner.user.name}")
@@ -142,28 +168,7 @@ c.Authenticator.shibboleth_logout_url = "https://example.org/Shibboleth.sso/Logo
 c.JupyterHub.admin_access = True
 c.Authenticator.admin_users = {'yuqiang'}
 
-c.JupyterHub.load_groups = {
-    # collaborative accounts get added to this group
-    # so it's easy to see which accounts are collaboration accounts
-    'gruppe1': [],
-    'gruppe2' : []
-}
-
-members_gruppe1 = ['tin','udo','jannik']
-c.JupyterHub.load_groups['gruppe1'] = members_gruppe1
-
-
 c.JupyterHub.load_roles.append(
-        {
-            "name": "collab_gruppe",
-            "scopes": [
-                "access:servers!user=shared_space1",
-                "admin:servers!user=shared_space1"],
-            "groups": ["gruppe1"],
-        }
-    )
-
-c.JupyterHub.load_roles = [
     {
         "name": "jupyterhub-idle-culler-role",
         "scopes": [
@@ -176,7 +181,7 @@ c.JupyterHub.load_roles = [
         # assignment of role's permissions to:
         "services": ["jupyterhub-idle-culler-service"],
     }
-]
+)
 
 c.JupyterHub.services = [
     {
