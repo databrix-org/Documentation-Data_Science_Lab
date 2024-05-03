@@ -1,0 +1,18 @@
+# SSH zu VM
+
+Die Programmierumgebung für Ihren Kurs wird in der bwCloud bereitgestellt. 
+Genauer gesagt, wird sie innerhalb einer virtuellen Machine (VM) in bwCloud deployed.
+Daher müssen Sie sich zunächst per Remote-Zugang in diese VM einloggen, um Ihre Programmierumgebung zu verwalten.
+Führen Sie folgende Punkte aus:
+
+Voraussetzung:
+ein SSH Schlüssel für die VM.
+
+1. Öffnen Sie einen Terminal.
+2. Öffnen Sie den Odner in Terminal, wo SSH Schlüssel gespeichert ist.
+3. Führen Sie folgenden Befehl aus, um mit ihrer VM zu verbinden
+``` js copy
+ssh -i [Name SSH Schlüssel] ubuntu@[IPv4 Adresse ihrer VM]
+```
+Sie müssen [Name SSH Schlüssel] und [IPv4 Adresse ihrer VM] mit echten Daten ersetzen
+4. Geben Sie den Passwort ein.
