@@ -1,7 +1,7 @@
 {
-"Dashboard":"bwCloud Dashboard",
-"ssh": "Einloggen in Manager Node",
-"Start": "Ihre Programmierumgebung starten/stoppen",
-"add_User":"User hinzufügen",
-"nodes":"Rechenressourcen hinyuf[gen"
+"Dashboard":"Dashboard",
+"ssh": "Manager Node",
+"Start": "Starten/Stoppen",
+"add_User":"Users",
+"nodes":"Wokers"
 }

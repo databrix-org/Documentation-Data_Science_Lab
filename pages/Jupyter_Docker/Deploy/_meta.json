@@ -1,7 +1,7 @@
 {
-  "Zertifikat": "Erstellung SSL-Zertifikat",
-  "Docker-compose":"Deploy mit docker compose",
-  "Apache_config":"Konfiguration 000-default.conf",
-  "Shib_config":"Konfiguration shibboleth.xml",
-  "Jupyterhub_config":"Konfiguration jupyterhub_config.py"
+  "Zertifikat": "SSL-Zertifikat",
+  "Docker-compose":"Deployment",
+  "Apache_config":"Konfiguration Apache",
+  "Shib_config":"Konfiguration Shibboleth",
+  "Jupyterhub_config":"Konfiguration jupyterhub"
 }
