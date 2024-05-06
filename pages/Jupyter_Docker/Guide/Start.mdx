@@ -9,9 +9,9 @@ cd /opt/jupyter-dhbw
 ```
 2. Für Start führen Sie folgenden Befehl aus.
 ``` js copy
-docker compose down
+docker stack deploy -c docker-compose.yml jupyter-dhbw
 ```
 3. Für Stop führen Sie folgenden Befehl aus.
 ``` js copy
-docker compose up -d
+docker stack rm jupyter-dhbw
 ```

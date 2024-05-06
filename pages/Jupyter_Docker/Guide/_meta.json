@@ -1,6 +1,6 @@
 {
 "Dashboard":"bwCloud Dashboard",
-"ssh": "SSH zu VM",
+"ssh": "Einloggen in Manager Node",
 "Start": "Ihre Programmierumgebung starten/stoppen",
 "add_User":"User hinzufügen"
 }

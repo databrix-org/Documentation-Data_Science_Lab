@@ -1,9 +1,12 @@
-# SSH zu VM
+# Einloggen in Manager Node
 
 Die Programmierumgebung für Ihren Kurs wird in der bwCloud bereitgestellt. 
-Genauer gesagt, wird sie innerhalb einer virtuellen Machine (VM) in bwCloud deployed.
-Daher müssen Sie sich zunächst per Remote-Zugang in diese VM einloggen, um Ihre Programmierumgebung zu verwalten.
-Führen Sie folgende Punkte aus:
+Genauer gesagt, wird sie in virtuellen Machinen (VM) in bwCloud deployed. 
+Sie müssen sich zunächst per Remote-Zugang in eine bestimmte VM einloggen, um Ihre Programmierumgebung zu verwalten. 
+Diese VM wird als Manager Node bezeichnet.
+Er verwaltet alle anderen Worker Nodes, also die VMs, die Rechenaufgaben durchführt.
+
+Führen Sie folgende Schritte aus, um sich in Manager Node einzuloggen:
 
 Voraussetzung:
 ein SSH Schlüssel für die VM.
@@ -12,7 +15,7 @@ ein SSH Schlüssel für die VM.
 2. Öffnen Sie den Odner in Terminal, wo SSH Schlüssel gespeichert ist.
 3. Führen Sie folgenden Befehl aus, um mit ihrer VM zu verbinden
 ``` js copy
-ssh -i [Name SSH Schlüssel] ubuntu@[IPv4 Adresse ihrer VM]
+ssh -i [Name SSH Schlüssel] ubuntu@[FQDN]
 ```
-Sie müssen [Name SSH Schlüssel] und [IPv4 Adresse ihrer VM] mit echten Daten ersetzen
+Sie müssen [Name SSH Schlüssel] und [FQDN] mit echten Daten ersetzen
 4. Geben Sie den Passwort ein.
