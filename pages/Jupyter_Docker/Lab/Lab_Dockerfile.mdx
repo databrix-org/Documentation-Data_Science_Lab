@@ -4,7 +4,7 @@
 FROM jupyter/base-notebook
 
 ARG NB_USER
-USER ${NB_USER}
+USER ${NB_USER} 
 
 # Copy environment files
 COPY requirements_dhbw-kurs.txt /opt/requirements_dhbw-kurs.txt
