@@ -9,13 +9,15 @@ Er verwaltet alle anderen Worker Nodes, also die VMs, die Rechenaufgaben durchf�
 Führen Sie folgende Schritte aus, um sich in Manager Node einzuloggen:
 
 Voraussetzung:
-ein SSH Schlüssel für die VM.
+Sie müssen Ihren eigenen privaten SSH Schlüssel mit diesem [Public Schlüssel generieren](https://owncloud.dhbw-stuttgart.de/index.php/apps/files?dir=/Databrix/bwCloud-Credentials&fileid=27525054).
+Sie müssen diesen Public Schlüssel herunterladen und anhand dieses Schlüssel Ihren eigenen privaten Schlüssel generieren.
+Für generation privaten SSH Schlüssel sehen Sie die [Anleitung](https://www.bw-cloud.org/en/bwcloud_scope/use) von bwCloud 
 
 1. Öffnen Sie einen Terminal.
-2. Öffnen Sie den Odner in Terminal, wo SSH Schlüssel gespeichert ist.
+2. Öffnen Sie den Odner in Terminal, wo ihrer privater SSH Schlüssel gespeichert ist.
 3. Führen Sie folgenden Befehl aus, um mit ihrer VM zu verbinden
 ``` js copy
-ssh -i [Name SSH Schlüssel] ubuntu@[FQDN]
+ssh -i [privater SSH Schlüssel] ubuntu@[Hostname]
 ```
-Sie müssen [Name SSH Schlüssel] und [FQDN] mit echten Daten ersetzen
+Sie müssen [privater SSH Schlüssel] und [Hostname] ihrer VM mit echten Daten ersetzen. 
 4. Geben Sie den Passwort ein.
