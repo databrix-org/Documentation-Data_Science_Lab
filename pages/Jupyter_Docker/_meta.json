@@ -1,8 +1,8 @@
 {
     "index": "Einleitung",
     "Technische_Überblick": "Technische Überblick",
-    "Deploy":"Deployment in bwCloud",
     "Guide":"Verwaltung Ihrer Programmierumgebung",
+    "Deploy":"Deployment in bwCloud",
     "Shibboleth": "Shibboleth SP und Apache2",
     "Hub": "Jupyterhub",
     "Lab":"Jupyterlab (Single User Server)"
