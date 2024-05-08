@@ -1,0 +1,57 @@
+# Deployment mit docker-compose.yml
+
+Sie sollen zuerst ein Directory für Ihres Jupyterhub Projekt auf Ihre VM erstellen. 
+Verwenden Sie **docker-compose.yml** in deisem Directory, um Images zu ziehen und auszuführen.
+Hier wird ein Beispiel **docker-compose.yml** dargestellt.
+
+```js
+version: "3.8"
+services:
+
+
+  jupyterhub:
+    image: guyq1997/jupyterhub-dhbw:latest
+    container_name: jupyterhub
+
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py"
+      #- "/opt/jupyterhub_docker/exchange_data:/tmp/exchange:rw"
+    environment:
+      DOCKER_NETWORK_NAME: jupyterhub_network
+
+    networks:
+      - jupyterhub_network
+ 
+    command: >
+      jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
+
+  databrix:
+    image: guyq1997/nextjs-dhbw
+
+    ports:
+      - "4001:3000"
+    volumes:
+#      - .:/app
+#      - /app/node_modules
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+networks:
+  jupyterhub_network:
+    name: jupyterhub_network
+    driver: overlay
+    external: True
+
+```
+
+In Volumes sehen Sie viele Dateien, die in docker network hinzugefügt werden müssen.
+Einige von denen sind Zertifikaten, welche Sie bereits generiert haben.
+Andere sind dann Konfigurationsdateien, welche Sie noch erstellen müssen:
+1. 000-default.conf
+2. shibboleth2.xml
+3. shibboleth-ds.conf
+4. jupyterhub_config.py (Optional)
+
+## References
+
+1. [Dockerhub für Dockerimage](https://hub.docker.com/)

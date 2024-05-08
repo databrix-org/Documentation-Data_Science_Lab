@@ -1,0 +1,7 @@
+{
+  "Zertifikat": "SSL-Zertifikat",
+  "Docker-compose":"Deployment",
+  "Apache_config":"Konfiguration Apache",
+  "Shib_config":"Konfiguration Shibboleth",
+  "Jupyterhub_config":"Konfiguration jupyterhub"
+}

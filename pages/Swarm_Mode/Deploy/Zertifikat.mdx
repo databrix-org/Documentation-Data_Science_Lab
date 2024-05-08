@@ -1,0 +1,38 @@
+# Erstellung SSL-Zertifikat
+Um die Daten in Jupyterhub sicherer zu machen, sollten wir über https auf sie zugreifen. 
+Um https verwenden zu können, müssen wir das SSL-Zertifikat für die VM erstellen. 
+Außerdem Shibboleth SP braucht auch ein Zertifikat um mit Shibboleth IdP zu kommunizieren.
+Hier verwenden wir certbot und Letsencrypt, um das Zertifikat automatisch zu generieren. 
+ 
+1.  Launch eine VM mit Ubuntu 20.04/22.04 
+2.  SSH zu Ihre VM, wo JD eingesetzt wird. 
+3.  ```js copy
+    mkdir /opt/jupyterhub_docker
+    cd /opt/jupyterhub_docker
+    mkdir exchange_data
+    ```
+4.	```js copy
+    sudo snap install --classic certbot
+    ```
+5.	```js copy
+    sudo ln -s /snap/bin/certbot /usr/bin/certbot
+    ```
+6.	```js copy
+    sudo certbot certonly --standalone
+    ```
+7.  ```js copy
+    sudo certbot renew --dry-run
+    ```
+5.	```js copy
+    openssl dhparam -out /etc/ssl/certs/dhparams.pem 2048
+    ```
+6.  ```js copy
+    shib-keygen -u _shibd -g _shibd -h $(hostname -f) -y 30 -e https://$(hostname -f)/shibboleth -n sp-signing -f
+    ```
+7.  ```js copy
+    shib-keygen -u _shibd -g _shibd -h $(hostname -f) -y 30 -e https://$(hostname -f)/shibboleth -n sp-encrypt -f
+    ```
+## References
+
+1. [SSLCertificateFile mit certbot generieren](https://certbot.eff.org/instructions?ws=other&os=ubuntufocal)
+2. [Zertifikat für Shibboleth SP](https://github.com/ConsortiumGARR/idem-tutorials/blob/master/idem-fedops/HOWTO-Shibboleth/Service%20Provider/Debian/HOWTO%20Install%20and%20Configure%20a%20Shibboleth%20SP%20v3.x%20on%20Debian-Ubuntu%20Linux.md)

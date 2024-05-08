@@ -1,0 +1,21 @@
+# Dockerfile für Jupyterhub
+```js
+FROM quay.io/jupyterhub/jupyterhub:latest
+
+COPY jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
+ 
+
+RUN pip install \
+ dockerspawner \
+ jupyterhub-firstuseauthenticator \
+ jhub_remote_user_authenticator \
+ jupyterhub-idle-culler \
+# jhub_shibboleth_auth \
+ oauthenticator \
+ jupyterhub-idle-culler
+
+```
+
+## References
+
+1. [Jupyterhub Docker Image](https://jupyterhub.readthedocs.io/en/stable/tutorial/quickstart-docker.html)

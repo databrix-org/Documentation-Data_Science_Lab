@@ -1,0 +1,32 @@
+# User in Ihrer Programmierumgebung hinzufügen
+
+Sie können Ihrer Programmierumgebung jederzeit Dozenten oder Studenten hinzufügen.
+ 
+1.  Öffnen Sie den Projekt-Odner
+     ``` js copy
+     cd /opt/jupyter-dhbw
+     ```
+2.  Öffnen Sie die Konfigurationsdaten mit Editor
+     ``` js copy
+     nano jupyterhub_config.py
+     ```
+3.  Gehen Sie zu Zeile 123, indem Sie Strg + / drücken, 123 eingeben und Enter drücken
+4.  Sie sehen folgende Code
+     ``` js
+     c.JupyterHub.load_groups = {
+          "collaborative": ["shared_space1"],
+          "Dozent" : ["Dozent1","Dozent2"],
+          "Gruppe1": ["Student1","Student2","Student3"],
+          "Gruppe2" : ["Student4","Student5"]
+     }
+     ```
+5.  Bitte fügen Sie den Vornamen des Dozenten oder Studenten in die entsprechende Liste ein.
+    Im folgenden Beispiel habe ich Dozent3 als Dozent hinzugefügt und Student6 zur zweiten Gruppe von Studenten hinzugefügt.
+     ``` js
+     c.JupyterHub.load_groups = {
+          "collaborative": ["shared_space1"],
+          "Dozent" : ["Dozent1","Dozent2","Dozent3"],
+          "Gruppe1": ["Student1","Student2","Student3"],
+          "Gruppe2" : ["Student4","Student5"，"Student6"]
+     }
+     ```

@@ -13,6 +13,10 @@
 
   "Jupyter_Docker":{
         "title":"Jupyter_Docker"
+       },
+
+  "Swarm_Mode":{
+        "title":"Jupyter_Swarm"
        }
 
 }

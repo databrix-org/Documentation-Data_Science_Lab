@@ -1,0 +1,5 @@
+{
+  "Lab_Dockerfile":"Jupyterlab Image",
+  "requirement_txt": "requirement.txt Datei",
+  "nbgrader_config": "Konfiguration nbgrader"
+}

@@ -1,0 +1,99 @@
+# Konfiguration Apache2
+**000-default.conf** wird verwendet, um Apache zu konfigurieren. Benutzeranfragen sollen erst zur Authentifizierung an SP weiterleitet werden, bevor Benutzer Jupyterhub besuchen.
+```js
+#Listen 80 
+<VirtualHost *:80>
+  ServerName example.org
+
+  Redirect / https://example/
+</VirtualHost>
+
+#Listen 443
+<VirtualHost *:443>
+  ServerName example
+
+  ServerSignature Off
+  SSLProxyEngine on
+  # Enable HTTP/2, if available
+  Protocols h2 http/1.1
+
+  # HTTP Strict Transport Security (mod_headers is required) (63072000 seconds)
+  Header always set Strict-Transport-Security "max-age=63072000"
+
+  # Configure SSL
+  SSLEngine on
+  SSLCertificateFile /etc/letsencrypt/live/example.org/fullchain.pem
+  SSLCertificateKeyFile /etc/letsencrypt/live/example.org/privkey.pem
+  SSLOpenSSLConfCmd DHParameters /etc/ssl/certs/dhparams.pem
+  # Intermediate configuration from SSL-config.mozilla.org (2022-03-03)
+  # Please note, that this configuration might be outdated - please update it accordingly using https://ssl-config.mozilla
+  SSLProtocol             all -SSLv3 -TLSv1 -TLSv1.1
+  SSLCipherSuite          ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+  SSLHonorCipherOrder     off
+  SSLSessionTickets       off
+  
+  # Jupyter-collaboration URL contains %, Apache must % understand
+  AllowEncodedSlashes On
+#----------------------Shibboleth-------------------------------
+  UseCanonicalName On
+  Include /etc/shibboleth-ds/shibboleth-ds.conf
+  Redirect seeother /shibboleth https://example.org/Shibboleth.sso/Metadata
+  RedirectMatch /start-session$ /Shibboleth.sso/Login
+
+  <Location /Shibboleth.sso>
+    AuthType None
+    Require all granted
+  </Location>
+ 
+  <Location /shibboleth-sp>
+    AuthType None
+    Require all granted
+  </Location>
+
+  Alias /shibboleth-sp/main.css /usr/share/shibboleth/main.css
+#----------------------Jupyterhub-------------------------------
+  <Location />
+    AuthType shibboleth
+    Require shibboleth
+  </Location>
+
+  <Location /home>
+    ProxyPreserveHost on
+    ShibRequireSession On
+    Require valid-user
+    ShibUseHeaders On
+    ProxyPass        http://databrix:3000/home
+    ProxyPassReverse http://databrix:3000/home
+  </Location>
+  
+  RewriteEngine On
+
+  RewriteCond %{HTTP:Connection} Upgrade [NC]
+  RewriteCond %{HTTP:Upgrade} websocket [NC]
+  RewriteRule /jupyterhub/(.*) ws://jupyterhub:8000/jupyterhub/$1 [P,L]
+  RewriteRule /jupyterhub/(.*) http://jupyterhub:8000/jupyterhub/$1 [P,L]
+  RewriteRule /home/(.*) ws://databrix:3000/home/$1 [P,L]
+  RewriteRule /home/(.*) http://databrix:3000/home/$1 [P,L]
+
+  <Location /jupyterhub>
+    RewriteEngine On
+    ProxyPreserveHost on
+    # separate Shibboleth Authen. and Jupyterhub to avoid CROS error.
+    ShibRequestSetting requireSession off
+    ShibUseHeaders On
+
+    ProxyPass        http://jupyterhub:8000/jupyterhub
+    ProxyPassReverse http://jupyterhub:8000/jupyterhub
+  </Location>
+</VirtualHost>
+```
+
+## References
+
+1. [Generelle Apache Konfiguration für Jupyterhub](https://jupyterhub.readthedocs.io/en/stable/howto/configuration/config-proxy.html)
+2. [Generelle Apache Konfiguration für Shibboleth SP](https://doku.tid.dfn.de/de:shibsp)
+3. [Generelle Apache Konfiguration für Shibboleth SP 2](https://shibboleth.atlassian.net/wiki/spaces/SHIB2/pages/2577072327/NativeSPApacheConfig)
+4. [Apache Konfiguration für Vermeidung CORS Error in Browser](https://discourse.jupyter.org/t/jupyterhub-try-to-make-preflight-request-to-shibboleth-idp/24853/4)
+5. [Apache Konfiguration für bypassing Shibboleth Authentification](https://shibboleth.atlassian.net/wiki/spaces/SHIB2/pages/2577072327/NativeSPApacheConfig#NativeSPApacheConfig-AuthConfigOptions)
+6. [Apache Konfiguration für jupyter-collaboration extension](https://discourse.jupyter.org/t/cant-connect-to-kernel/24705/14)
+7. [Anleitung für Installation Apache mit Shibboleth](https://github.com/ConsortiumGARR/idem-tutorials/blob/master/idem-fedops/HOWTO-Shibboleth/Service%20Provider/Debian/HOWTO%20Install%20and%20Configure%20a%20Shibboleth%20SP%20v3.x%20on%20Debian-Ubuntu%20Linux.md)
