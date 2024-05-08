@@ -1,7 +1,7 @@
 {
   "Zertifikat": "SSL-Zertifikat",
-  "compose_file":"Deployment",
   "Apache_config":"Konfiguration Apache",
+  "compose_file":"Deployment",
   "Shib_config":"Konfiguration Shibboleth",
   "Jupyterhub_config":"Konfiguration jupyterhub"
 }
