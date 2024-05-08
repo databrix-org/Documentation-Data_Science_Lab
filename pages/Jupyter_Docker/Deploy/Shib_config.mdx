@@ -120,5 +120,11 @@
 **idpselect_condig.js** (in Shibboleth-ds Odner) muss auch konfiguriert werden, damit VM von Shibboleth IdP erlaubt ist.
 Add this:
 ```js
-this.returnWhiteList = [ "^https:\/\/exampl\.ma.bw-cloud-instance\.org\/Shibboleth\.sso\/>
+ this.redirectAllow = [ "^https:\/\/1985609f-7839-4819-8840-2d38548e4ea5.ma.bw-cloud-instance\.org\/Shibboleth\.sso\/Login.*$" ,"^https:\/\/example\.com\/Shibboleth\.sso\/Login.*$" ];
+ this.returnWhiteList = [ "^https:\/\/example\.ma.bw-cloud-instance\.org\/Shibboleth\.sso\/Login.*$" ];
 ```
+
+systemctl restart shibd
+systemctl restart apache2
+Referecnces:
+1. 

@@ -15,7 +15,8 @@ RUN apt-get update && \
     apt-get -y --no-install-recommends install \
         libapache2-mod-shib make wget
 
-RUN wget --no-check-certificate https://shibboleth.net/downloads/embedded-discovery-service/latest/shibboleth-embedded-ds-1>    tar -xzf shibboleth-embedded-ds-1.3.0.tar.gz && \
+RUN wget --no-check-certificate https://shibboleth.net/downloads/embedded-discovery-service/latest/shibboleth-embedded-ds-1.3.0.tar.gz && \
+    tar -xzf shibboleth-embedded-ds-1.3.0.tar.gz && \
     cd shibboleth-embedded-ds-1.3.0 && \
     make install
 
@@ -32,3 +33,6 @@ RUN chmod g+rw /etc/shibboleth
 CMD shibd -f -F -d 3
 RUN a2enmod proxy proxy_http ssl headers rewrite shib
 ```
+
+References:
+1. 

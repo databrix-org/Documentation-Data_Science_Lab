@@ -11,14 +11,17 @@ Hier verwenden wir certbot und Letsencrypt, um das Zertifikat automatisch zu gen
     cd /opt/jupyterhub_docker
     mkdir exchange_data
     ```
-3.	```js copy
+4.	```js copy
     sudo snap install --classic certbot
     ```
-4.	```js copy
+5.	```js copy
     sudo ln -s /snap/bin/certbot /usr/bin/certbot
     ```
-4.	```js copy
-    sudo certbot certonly –standalone
+6.	```js copy
+    sudo certbot certonly --standalone
+    ```
+7.  ```js copy
+    sudo certbot renew --dry-run
     ```
 5.	```js copy
     openssl dhparam -out /etc/ssl/certs/dhparams.pem 2048
