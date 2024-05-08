@@ -11,8 +11,8 @@
          "title":"TLJH"
          },
 
-  "Jupyter_Docker":{
-        "title":"Jupyter_Docker"
+  "Jupyter_docker":{
+        "title":"Jupyter_docker"
        },
 
   "Swarm_Mode":{
