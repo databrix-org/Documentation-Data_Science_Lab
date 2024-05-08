@@ -1,6 +1,6 @@
 {
   "Zertifikat": "SSL-Zertifikat",
-  "Docker-compose":"Deployment",
+  "compose_file":"Deployment",
   "Apache_config":"Konfiguration Apache",
   "Shib_config":"Konfiguration Shibboleth",
   "Jupyterhub_config":"Konfiguration jupyterhub"
