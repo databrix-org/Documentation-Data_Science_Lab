@@ -8,16 +8,16 @@ Er verwaltet alle anderen Worker Nodes, also die VMs, die Rechenaufgaben durchf�
 
 Führen Sie folgende Schritte aus, um sich in Manager Node einzuloggen:
 
-Voraussetzung:
+## Voraussetzung:
 Sie müssen Ihren eigenen SSH Schlüssel generieren. Für generation SSH Schlüssel sehen Sie die [Anleitung](https://www.bw-cloud.org/en/bwcloud_scope/use) von bwCloud.
 
-Erstes Einloggen:
+## Erstes Einloggen:
 1. Öffnen Sie einen Terminal.
 2. Führen Sie folgenden Befehl aus, um mit ihrer VM zu verbinden
 ``` js copy
 ssh [Ihrer Vorname]@93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org
 ```
-Sie müssen [Ihrer Username] mit echten Daten ersetzen. 
+   Sie müssen [Ihrer Username] mit echten Daten ersetzen. 
 3. Geben Sie den Passwort ein.
 4. ```mkdir ~/.ssh```
 5. ```nano ~/.ssh/authorized_keys```
@@ -27,11 +27,10 @@ Sie müssen [Ihrer Username] mit echten Daten ersetzen.
 9. Sie können jetzt mit ihrer privaten SSH Schlüssel sicher sich einloggen
 
 
-Sicheres Einloggen:
+## Sicheres Einloggen:
 1. Öffnen Sie einen Terminal.
 2. Öffnen Sie den Odner in Terminal, wo ihrer privater SSH Schlüssel gespeichert ist.
-3. 
-``` js copy 
-ssh -i [privater Schlüssel] [Ihrer Username]@93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org
-```
+3. ``` js copy 
+   ssh -i [privater Schlüssel] [Ihrer Username]@93eca700-b764-4621-ab7f-de0792aa31ab.ma.bw-cloud-instance.org
+   ```
 4. geben Sie Ihren Passwort ein.
