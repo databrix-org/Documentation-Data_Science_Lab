@@ -3,7 +3,6 @@
     "Technische_Überblick": "Technische Überblick",
     "Guide":"Verwaltung Ihrer Programmierumgebung",
     "Deploy":"Deployment in bwCloud",
-    "Shibboleth": "Shibboleth SP und Apache2",
     "Hub": "Jupyterhub",
     "Lab":"Jupyterlab (Single User Server)"
 }
