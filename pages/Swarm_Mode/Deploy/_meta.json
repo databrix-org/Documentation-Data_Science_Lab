@@ -1,5 +1,6 @@
 {
   "Zertifikat": "SSL-Zertifikat",
+  "Install":"Installation",
   "Docker-compose":"Deployment",
   "Apache_config":"Konfiguration Apache",
   "Shib_config":"Konfiguration Shibboleth",
