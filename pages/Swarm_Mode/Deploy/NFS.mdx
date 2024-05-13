@@ -1,0 +1,27 @@
+# Network File System
+
+## Manager Node
+
+``` js copy
+sudo apt-get install nfs-kernel-server 
+sudo apt-get install nfs-common
+
+nano /etc/exports
+/PFAD/ZUR/FREIGABE2      *(ro,async)
+
+sudo exportfs -ra 
+sudo service nfs-kernel-server restart
+```
+
+## Worker Node
+``` js copy
+sudo apt-get install nfs-common
+
+cd /media
+sudo mkdir MEINEFREIGABE
+sudo mount ipadresse:/PFAD/ZUR/FREIGABE /media/MEINEFREIGABE 
+```
+
+## Referecnces
+
+1. [ubuntu NFS](https://wiki.ubuntuusers.de/NFS/)
