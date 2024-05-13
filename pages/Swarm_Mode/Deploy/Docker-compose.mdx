@@ -6,9 +6,15 @@ Hier wird ein Beispiel **docker-compose.yml** dargestellt.
 
 ```js
 version: "3.8"
+
+volumes:
+  nfs-jupyter:
+    driver_opts:
+      type: nfs
+      o: nfsvers=4,addr=193.196.52.185
+      device: ":/opt/swarm2/swarm2/exchange_data"
+
 services:
-
-
   jupyterhub:
     image: guyq1997/jupyterhub-dhbw:latest
     container_name: jupyterhub
@@ -16,9 +22,12 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py"
+      - nfs-jupyter:/srv/ngshare
       #- "/opt/jupyterhub_docker/exchange_data:/tmp/exchange:rw"
     environment:
       DOCKER_NETWORK_NAME: jupyterhub_network
+    ports:
+      - "8000:8000"
 
     networks:
       - jupyterhub_network
@@ -30,7 +39,7 @@ services:
     image: guyq1997/nextjs-dhbw
 
     ports:
-      - "4001:3000"
+      - "3000:3000"
     volumes:
 #      - .:/app
 #      - /app/node_modules

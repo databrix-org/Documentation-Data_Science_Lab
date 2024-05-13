@@ -130,13 +130,17 @@ c.Spawner.debug = True
 
 
 c.SwarmSpawner.cmd = ["jupyterhub-singleuser", "--allow-root"]
+
+mounts = [{
+        'type' : 'bind',
+        'target' : '/tmp/exchange',
+        'source' : '/opt/mount'}]
+
 c.SwarmSpawmer.use_internal_ip = True
-#c.SwarmSpawner.extra_container_spec = {
-#        'mounts':
-#                {'type': 'bind',
-#                 'source': '/opt/shib-docker/exchange_data',
-#                 'target': '/tmp/exchange', }
-#        }
+c.SwarmSpawner.extra_container_spec = {
+        'mounts': mounts
+        }
+
 c.SwarmSpawner.image = "guyq1997/jupyterlab-dhbw"
 c.SwarmSpawner.network_name = os.environ["DOCKER_NETWORK_NAME"]
 c.SwarmSpawner.extra_host_config = { 'network_mode': os.environ["DOCKER_NETWORK_NAME"] }

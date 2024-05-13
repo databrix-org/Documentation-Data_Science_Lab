@@ -62,18 +62,18 @@
     ShibRequireSession On
     Require valid-user
     ShibUseHeaders On
-    ProxyPass        http://databrix:3000/home
-    ProxyPassReverse http://databrix:3000/home
+    ProxyPass        http://ipv4_managernode:3000/home
+    ProxyPassReverse http://ipv4_managernode:3000/home
   </Location>
   
   RewriteEngine On
 
   RewriteCond %{HTTP:Connection} Upgrade [NC]
   RewriteCond %{HTTP:Upgrade} websocket [NC]
-  RewriteRule /jupyterhub/(.*) ws://jupyterhub:8000/jupyterhub/$1 [P,L]
-  RewriteRule /jupyterhub/(.*) http://jupyterhub:8000/jupyterhub/$1 [P,L]
-  RewriteRule /home/(.*) ws://databrix:3000/home/$1 [P,L]
-  RewriteRule /home/(.*) http://databrix:3000/home/$1 [P,L]
+  RewriteRule /jupyterhub/(.*) ws://ipv4_managernode:8000/jupyterhub/$1 [P,L]
+  RewriteRule /jupyterhub/(.*) http://ipv4_managernode:8000/jupyterhub/$1 [P,L]
+  RewriteRule /home/(.*) ws://ipv4_managernode:3000/home/$1 [P,L]
+  RewriteRule /home/(.*) http://ipv4_managernode:3000/home/$1 [P,L]
 
   <Location /jupyterhub>
     RewriteEngine On
@@ -82,8 +82,8 @@
     ShibRequestSetting requireSession off
     ShibUseHeaders On
 
-    ProxyPass        http://jupyterhub:8000/jupyterhub
-    ProxyPassReverse http://jupyterhub:8000/jupyterhub
+    ProxyPass        http://ipv4_managernode:8000/jupyterhub
+    ProxyPassReverse http://ipv4_managernode:8000/jupyterhub
   </Location>
 </VirtualHost>
 ```
