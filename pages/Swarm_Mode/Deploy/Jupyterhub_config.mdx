@@ -1,15 +1,39 @@
 # Konfiguration Jupyterhub
 Fügen Sie den folgenden Code in die Datei **jupyterhub_config.py** ein.
 ```js
+import subprocess
+import json
 import sys
 import os
+from dockerspawner import SwarmSpawner
 from dockerspawner import DockerSpawner
 from jupyterhub.auth import Authenticator, LocalAuthenticator
 from jupyterhub.handlers import BaseHandler
 from traitlets import Unicode, List, validate, TraitError
 from tornado import web
 
-class ShibbolethLoginHandler(BaseHandler): 
+class ShibbolethLoginHandler(BaseHandler):
+
+    def _write_user_name_in_json(self,username_dict,username,memberstaff):
+        idname = ''
+        if memberstaff != 'staff;member':
+            for k,v in username_dict['student'].items():
+                if len(v) < 1:
+                    username_dict['student'][k] = username
+                    idname = k
+                    break
+        else:
+            for k,v in username_dict['dozent'].items():
+                if len(v) < 1:
+                    username_dict['dozent'][k] = username
+                    idname = k
+                    break
+
+        with open('/srv/ngshare/user-name.json', 'w') as file:
+            json.dump(username_dict, file)
+
+        return idname
+
 
     def _get_user_data_from_request(self):
         """Get shibboleth attributes (user data) from request headers."""
@@ -19,32 +43,57 @@ class ShibbolethLoginHandler(BaseHandler):
         # <name for the intended audience of the identifier >!
         # <opaque identifier for the principal >
         user_data = {}
-        for i, header in enumerate(self.authenticator.headers):
-            value = self.request.headers.get(header, "")
-            if value:
-                try:
-                    # sometimes header value is in latin-1 encoding
-                    # TODO what causes this? fix encoding in there
-                    value = value.encode('latin-1').decode('utf-8')
-                except UnicodeDecodeError:
-                    pass
-                user_data[header] = value
-                if i == 0:
-                    user_data['jh_name'] = value
+        with open('/srv/ngshare/user-name.json', 'r') as file:
+            username_dict = json.load(file)
+
+        student_name_dict = {v:k for k,v in username_dict['student'].items()}
+        dozent_name_dict = {v:k for k,v in username_dict['dozent'].items()}
+
+        value_list = [self.request.headers.get(header, "") for header in self.authenticator.headers]
+        self.log.info("User data debug: %s", value_list)
+
+
+        if value_list[1] != 'staff;member' and value_list[0]:
+                if value_list[0] in student_name_dict.keys():
+                    user_data['mail'] = value_list[0]
+                    user_data['jh_name'] = student_name_dict[value_list[0]]
+                else:
+                    user_data['jh_name'] = self._write_user_name_in_json(username_dict,value_list[0],value_list[1])
+                    user_data['mail'] = value_list[0]
+
+        if value_list[1] == 'staff;member' and value_list[0]:
+                if value_list[0] in dozent_name_dict.keys():
+                    user_data['mail'] = value_list[0]
+                    user_data['jh_name'] = dozent_name_dict[value_list[0]]
+                else:
+                    user_data['jh_name'] = self._write_user_name_in_json(username_dict,value_list[0],value_list[1])
+                    user_data['mail'] = value_list[0]
+        if value_list[0] in ['gu@lehre.dhbw-stuttgart.de']:
+                user_data['jh_name'] = value_list[0]
+        self.log.info("User data debug: %s", user_data)
         return user_data
 
     async def get(self):
         """Get user data and log user in."""
         self.statsd.incr('login.request')
         user_data = self._get_user_data_from_request()
-        if user_data.get('jh_name') is None:
+
+        header_name = self.authenticator.header_name
+        remote_user = self.request.headers.get(header_name, "")
+        if user_data.get('jh_name') is not None:
+            user = await self.login_user(user_data)
+        elif remote_user != "":
+            user = self.user_from_username(remote_user)
+            self.set_login_cookie(user)
+        else:
             raise web.HTTPError(403)
 
-        user = await self.login_user(user_data)
         if user is None:
             raise web.HTTPError(403)
         else:
             self.redirect(self.get_next_url(user))
+
+
 class ShibbolethLogoutHandler(BaseHandler):
     """Log a user out from JupyterHub by clearing their login cookie
     and then redirect to shibboleth logout url to clear shibboleth cookie."""
@@ -59,7 +108,7 @@ class ShibbolethLogoutHandler(BaseHandler):
 
 class ShibbolethAuthenticator(Authenticator):
     headers = List(
-        default_value=['mail', 'Eppn', 'cn', 'Givenname', 'sn'],
+        default_value=['mail','unscoped-affiliation'],
         config=True,
         help="""List of HTTP headers to get user data. First item is used as unique user name."""
     )
@@ -68,8 +117,13 @@ class ShibbolethAuthenticator(Authenticator):
         config=True,
         help="""Url to logout from shibboleth SP.""")
 
+    header_name = Unicode(
+        default_value='REMOTE_USER',
+        config=True,
+        help="""HTTP header to inspect for the authenticated username.""")
+
     @validate('headers')
-def _valid_headers(self, proposal):
+    def _valid_headers(self, proposal):
         if not proposal['value']:
             raise TraitError('Headers should contain at least 1 item.')
         return proposal['value']
@@ -82,9 +136,9 @@ def _valid_headers(self, proposal):
         'name' holds the username and 'auth_state' holds all data requested from shibboleth.
         """
         user_data = {
-            'name': data['jh_name'],
-            'auth_state': data
-        }
+              'name': data['jh_name'],
+              'auth_state': data
+              }
         return user_data
 
     def get_handlers(self, app):
@@ -93,76 +147,24 @@ def _valid_headers(self, proposal):
             (r'/logout', ShibbolethLogoutHandler),
         ]
 
-c.JupyterHub.load_roles = []
+with open('/srv/ngshare/user-name.json', 'r') as file:
+    user_dict = json.load(file)
 
 c.JupyterHub.load_groups = {
-    # collaborative accounts get added to this group
-    # so it's easy to see which accounts are collaboration accounts
-    "collaborative": [],
-}
+                "Dozent":{
+                    'users':[i for i in user_dict['dozent'].keys()],
+                },
+            }
 
-c.JupyterHub.load_groups['gruppe1'] = ['yuqiang','tin','udo','jannik']
-
-c.JupyterHub.load_groups["collaborative"].append('shared_space1')
-
-
-c.JupyterHub.load_roles.append(
+c.JupyterHub.load_roles=[
     {
-        "name": "collab-access",
+        "name": "user",
         "scopes": [
-            "access:servers!user=shared_space1",
-            "admin:servers!user=shared_space1",
             "admin-ui",
-            "list:users!user=shared_space1",
-        ],
-        "groups": ['gruppe1'],
-    }
-)
+            "read:users!user",
+            ]
+    },
 
-Dozenten = ['yuqiang','jannik']
-
-def pre_spawn_hook(spawner):
-        spawner.log.info(f"Enabling RTC for user {spawner.user.name}")
-        spawner.args.append("--LabApp.collaborative=True")
-
-c.Spawner.pre_spawn_hook =  pre_spawn_hook
-c.Spawner.debug = True
-
-
-c.SwarmSpawner.cmd = ["jupyterhub-singleuser", "--allow-root"]
-
-mounts = [{
-        'type' : 'bind',
-        'target' : '/tmp/exchange',
-        'source' : '/opt/mount'}]
-
-c.SwarmSpawmer.use_internal_ip = True
-c.SwarmSpawner.extra_container_spec = {
-        'mounts': mounts
-        }
-
-c.SwarmSpawner.image = "guyq1997/jupyterlab-dhbw"
-c.SwarmSpawner.network_name = os.environ["DOCKER_NETWORK_NAME"]
-c.SwarmSpawner.extra_host_config = { 'network_mode': os.environ["DOCKER_NETWORK_NAME"] }
-c.SwarmSpawner.start_timeout = 500
-c.SwarmSpawner.remove = False
-c.Spawner.extra_placement_spec = { "constraints": ["node.role == worker"] }
- 
-c.ConfigurableHTTPProxy.debug = True
-
-c.JupyterHub.spawner_class = MyDockerSpawner
-
-c.JupyterHub.hub_ip = "0.0.0.0"
-c.JupyterHub.bind_url = 'http://0.0.0.0:8000/jupyterhub'
-
-
-c.JupyterHub.authenticator_class = ShibbolethAuthenticator
-c.ShibbolethAuthenticator.headers = ["Givenname"]
-c.Authenticator.shibboleth_logout_url = "https://example.org/Shibboleth.sso/Logout"
-c.JupyterHub.admin_access = True
-c.Authenticator.admin_users = {'yuqiang'}
-
-c.JupyterHub.load_roles.append(
     {
         "name": "jupyterhub-idle-culler-role",
         "scopes": [
@@ -170,12 +172,113 @@ c.JupyterHub.load_roles.append(
             "read:users:activity",
             "read:servers",
             "delete:servers",
-            # "admin:users", # if using --cull-users
+            "admin:users", # if using --cull-users
         ],
         # assignment of role's permissions to:
         "services": ["jupyterhub-idle-culler-service"],
     }
+]
+
+
+check = [0 for i in user_dict['student'].values() if len(i) == 0]
+dozent_scope = ["self"]
+workspaces = []
+
+for i in [1,2,3,4,5,6,7,8,9,10]:
+
+    group_name = 'gruppe' + str(int(i))
+    space_name = 'workspace_gruppe' + str(int(i))
+    #workspaces.append(group_name)
+    student_name = []
+    if check[0] == 0:
+        student_name = ['student'+ '0'*( 3 - len(str(j+1)) ) + str(j+1) for j in range( (i-1)*3, i*3 )]
+        c.JupyterHub.load_groups[group_name] = {'users':[space_name]+ student_name}
+    c.JupyterHub.load_roles.append(
+        {
+        "name": "gruppen-"+str(i)+"-mitglied",
+        "scopes": [
+            "access:servers!user=" + space_name,
+            "servers!user=" + space_name,
+            "read:users!user=" + space_name,
+            "users:activity!user=" + space_name,
+            "list:users!user=" + space_name,
+        ],
+        "groups": [group_name],
+        }
+    )
+
+    dozent_scope.append("access:servers!user=" + space_name)
+    dozent_scope.append("servers!user=" + space_name)
+    dozent_scope.append("read:users!user=" + space_name)
+    dozent_scope.append("users:activity!user=" + space_name)
+    dozent_scope.append("list:users!user=" + space_name)
+    dozent_scope.append("groups!group=" + group_name)
+
+
+c.JupyterHub.load_roles.append(
+    {"name": "dozent-role",
+     "scopes": dozent_scope,
+     "groups": ["Dozent"],
+    }
 )
+
+def pre_spawn_hook(spawner):
+    username = spawner.user.name  # get the username
+    volume_path = os.path.join('/srv/ngshare/jupyterhub-user-volumes', username)
+
+    if not os.path.exists(volume_path):
+        os.mkdir(volume_path, 0o755)
+        os.chown(volume_path,1000,1000)
+
+    mounts = [
+              {'type': 'bind',
+               'source': '/opt/mount/jupyterhub-user-volumes/' + username,
+               'target': '/home/jovyan/work'},
+              {'type' : 'bind',
+               'target' : '/tmp/exchange',
+               'source' : '/opt/mount/DHBW-Kurs'}]
+    spawner.extra_container_spec = {'mounts': mounts}
+
+# attach the hook function to the spawner
+c.Spawner.pre_spawn_hook =  pre_spawn_hook
+c.Spawner.debug = True
+c.DockerSpawner.notebook_dir = '/home/jovyan/work'
+c.SwarmSpawner.cmd = ["jupyterhub-singleuser", "--allow-root"]
+c.SwarmSpawmer.use_internal_ip = True
+c.SwarmSpawner.network_name = os.environ["DOCKER_NETWORK_NAME"]
+c.SwarmSpawner.extra_host_config = { 'network_mode': os.environ["DOCKER_NETWORK_NAME"] }
+c.SwarmSpawner.start_timeout = 500
+c.Spawner.http_timeout = 60
+c.SwarmSpawner.remove = False
+c.Spawner.extra_placement_spec = { "constraints": ["node.role == worker"] }
+c.ConfigurableHTTPProxy.debug = True
+
+def image_for_user(user):
+    "Given a user, return the right image"""
+    groups = [group.name for group in user.groups]
+    if 'Dozent' in groups:
+        return "guyq1997/jupyterlab-dhbw:dozent"
+    else:
+        return "guyq1997/jupyterlab-dhbw:student"
+
+class MySwarmSpawner(SwarmSpawner):
+    def start(self):
+        self.image = image_for_user(self.user)
+        return super().start()
+c.JupyterHub.spawner_class = MySwarmSpawner
+
+c.JupyterHub.default_url = "/jupyterhub/hub/admin"
+
+#c.JupyterHub.base_url = "/jupyterhub"
+c.JupyterHub.hub_ip = "0.0.0.0"
+#c.JupyterHub.bind_url = 'http://jupyterhub:8000'
+#c.JupyterHub.hub_port = 8089  # IP as seen on the docker network. Can also be a hostname.
+#c.JupyterHub.port = 8000
+c.JupyterHub.bind_url = 'http://0.0.0.0:8000/jupyterhub'
+
+c.JupyterHub.authenticator_class = ShibbolethAuthenticator
+c.Authenticator.shibboleth_logout_url = "https://1985609f-7839-4819-8840-2d38548e4ea5.ma.bw-cloud-instance.org/Shibboleth.sso/Logout"c.JupyterHub.admin_access = True
+c.Authenticator.admin_users = {'gu@lehre.dhbw-stuttgart.de'}
 
 c.JupyterHub.services = [
     {
@@ -185,9 +288,10 @@ c.JupyterHub.services = [
             "-m", "jupyterhub_idle_culler",
             "--timeout=300",
         ],
-        # "admin": True,
+         "admin": True,
     }
 ]
+
 ```
 
 ## Referecnces

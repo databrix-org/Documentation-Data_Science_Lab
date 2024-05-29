@@ -7,23 +7,30 @@ sudo apt-get install nfs-kernel-server
 sudo apt-get install nfs-common
 
 nano /etc/exports
-/PFAD/ZUR/FREIGABE2      *(ro,async)
+/opt/exchange_data 193.196.xx.xx(rw,no_subtree_check,no_root_squash,sync)
 
 sudo exportfs -ra 
 sudo service nfs-kernel-server restart
 
-sudo chown -R ubuntu:users /PFAD/ZUR/FREIGABE2/DHBW-Kurs 
+sudo chown -R ubuntu:users /opt/exchange_data/DHBW-Kurs 
 ```
 
 ## Worker Node
 ``` js copy
 sudo apt-get install nfs-common
 
-cd /media
-sudo mkdir MEINEFREIGABE
-sudo mount ipadresse:/PFAD/ZUR/FREIGABE /media/MEINEFREIGABE 
+cd /opt
+sudo mkdir mount
+sudo mount ipadresse:/opt/exchange_data /opt/mount 
 ```
 
+# Json file
+
+/opt/exchange_data/user-name.json
+
+{"student": {"student001": "", "student002": "", "student003": "", "student004": ""},
+ "dozent" : {"dozent01":"", "dozent02":""}
+}
 ## Referecnces
 
 1. [ubuntu NFS](https://wiki.ubuntuusers.de/NFS/)

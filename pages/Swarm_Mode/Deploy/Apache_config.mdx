@@ -57,13 +57,12 @@
     Require shibboleth
   </Location>
 
-  <Location /home>
+  <Location /dhbw-login>
     ProxyPreserveHost on
     ShibRequireSession On
     Require valid-user
     ShibUseHeaders On
-    ProxyPass        http://ipv4_managernode:3000/home
-    ProxyPassReverse http://ipv4_managernode:3000/home
+    Redirect /dhbw-login http://example.org/jupyterhub
   </Location>
   
   RewriteEngine On
@@ -72,8 +71,6 @@
   RewriteCond %{HTTP:Upgrade} websocket [NC]
   RewriteRule /jupyterhub/(.*) ws://ipv4_managernode:8000/jupyterhub/$1 [P,L]
   RewriteRule /jupyterhub/(.*) http://ipv4_managernode:8000/jupyterhub/$1 [P,L]
-  RewriteRule /home/(.*) ws://ipv4_managernode:3000/home/$1 [P,L]
-  RewriteRule /home/(.*) http://ipv4_managernode:3000/home/$1 [P,L]
 
   <Location /jupyterhub>
     RewriteEngine On

@@ -1,4 +1,7 @@
 # Konfiguration Shibboleth
+
+## shibboleth.xml
+
 **shibbboleth.xml** wird für die Kommunikation mit dem IdP zur Authentifizierung des Benutzers verwendet. 
 
 ```js
@@ -117,11 +120,21 @@
 
 </SPConfig>
 ```
+## idpselect_condig.js
 **idpselect_condig.js** (in Shibboleth-ds Odner) muss auch konfiguriert werden, damit VM von Shibboleth IdP erlaubt ist.
 Add this:
 ```js
  this.redirectAllow = [ "^https:\/\/1985609f-7839-4819-8840-2d38548e4ea5.ma.bw-cloud-instance\.org\/Shibboleth\.sso\/Login.*$" ,"^https:\/\/example\.com\/Shibboleth\.sso\/Login.*$" ];
  this.returnWhiteList = [ "^https:\/\/example\.ma.bw-cloud-instance\.org\/Shibboleth\.sso\/Login.*$" ];
+```
+## attribute-map.xml
+**attribute-map.xml** definiert welche Attribution werden von shibboleth angezeigt und in http Headers hinzugefügt. 
+Folgende Attribution zeigt ob der User ein Mitarbeiter oder ein Student ist. Diese müssen Sie in **attribute-map.xml** schreiben.
+
+``` js copy
+<Attribute name="urn:mace:dir:attribute-def:eduPersonAffiliation" id="unscoped-affiliation">
+    <AttributeDecoder xsi:type="StringAttributeDecoder" caseSensitive="false"/>
+</Attribute>
 ```
 
 systemctl restart shibd
