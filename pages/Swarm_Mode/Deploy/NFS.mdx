@@ -7,12 +7,10 @@ sudo apt-get install nfs-kernel-server
 sudo apt-get install nfs-common
 
 nano /etc/exports
-/opt/exchange_data 193.196.xx.xx(rw,no_subtree_check,no_root_squash,sync)
+/opt/exchange_data ip_worker(rw,no_subtree_check,no_root_squash,sync)
 
 sudo exportfs -ra 
 sudo service nfs-kernel-server restart
-
-sudo chown -R ubuntu:users /opt/exchange_data/DHBW-Kurs 
 ```
 
 ## Worker Node
@@ -21,7 +19,7 @@ sudo apt-get install nfs-common
 
 cd /opt
 sudo mkdir mount
-sudo mount ipadresse:/opt/exchange_data /opt/mount 
+sudo mount ipadresse_manager:/opt/exchange_data /opt/mount 
 ```
 
 # Json file
