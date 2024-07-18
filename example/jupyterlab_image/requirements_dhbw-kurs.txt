@@ -1,0 +1,10 @@
+ipykernel
+plotly
+pandas
+boto3
+ipympl
+matplotlib
+numpy
+seaborn
+basemap
+nbformat
