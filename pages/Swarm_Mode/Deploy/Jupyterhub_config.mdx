@@ -7,6 +7,7 @@ import json
 import base64
 import sys
 import os
+from jupyterhub import orm
 from dockerspawner import SwarmSpawner, DockerSpawner
 from traitlets import Unicode, List, validate, TraitError
 from tornado import web
@@ -83,7 +84,7 @@ class ShibbolethClerkLogoutHandler(OAuthLogoutHandler):
 
 class ShibbolethClerkAuthenticator(OAuthenticator):
 
-    manage_groups = True
+    #manage_groups = True
 
     headers = List(
         default_value=['mail'],
@@ -97,31 +98,6 @@ class ShibbolethClerkAuthenticator(OAuthenticator):
 
     login_handler = ShibbolethClerkLoginHandler
     logout_handler = ShibbolethClerkLogoutHandler
-
-
-    def _initialize_user(self, username):
-        with open('/srv/ngshare/dhbw-user-database/group_info.json', 'r') as file:
-            groupinfo_dict = json.load(file)
-
-        group = 0
-
-        for k,v in groupinfo_dict.items():
-            if len(v) < 4:
-
-                groupinfo_dict[k].append(username)
-                with open('/srv/ngshare/dhbw-user-database/group_info.json', 'w') as file:
-                    fcntl.flock(file, fcntl.LOCK_EX)
-                    json.dump(groupinfo_dict, file)
-                    fcntl.flock(file, fcntl.LOCK_UN)
-                userdata = {"username":username , "group": k}
-                filepath = '/srv/ngshare/dhbw-user-database/' + username + '.json'
-                with open(filepath, "w") as json_file:
-                    json.dump(userdata, json_file)
-                group = k
-
-                break
-
-        return group
 
 
     @validate('headers')
@@ -139,24 +115,11 @@ class ShibbolethClerkAuthenticator(OAuthenticator):
         try:
             check = data['shibboleth']
             username = data['jh_name']
-            file_path = '/srv/ngshare/dhbw-user-database/' + username +'.json'
-            if os.path.exists(file_path):
-
-                with open(file_path, 'r') as file:
-                    userinfo_dict = json.load(file)
-                user_data = {
+            user_data = {
                     'name': username,
                     'auth_state': data,
-                    'groups': [userinfo_dict['group']]
                     }
-            else:
-                group = self._initialize_user(username)
-                jhname = username
-                user_data = {
-                    'name': jhname,
-                    'auth_state': data,
-                    'groups': [group]
-                    }
+
             return user_data
 
         except:
@@ -177,10 +140,10 @@ class ShibbolethClerkAuthenticator(OAuthenticator):
                     token_info["refresh_token"] = refresh_token
 
             auth_model = {
-                "name": 'clerk-'+username,
+                "name": 'clerk-' + username,
                 "admin": True if username in self.admin_users else None,
                 "auth_state": self.build_auth_state_dict(token_info, user_info),
-                "groups" : [user_info.get('public_metadata')['rolle']]
+                "groups" : [user_info.get('public_metadata')]
             }
 
             return await self.update_auth_model(auth_model)
@@ -190,7 +153,6 @@ class ShibbolethClerkAuthenticator(OAuthenticator):
                  (r'/logout',self.logout_handler),
                  (r'/login', self.login_handler),
                ]
-
 """
 ---------------------------add idle culler service and user role----------------------------------------------------
 """
@@ -201,7 +163,8 @@ c.JupyterHub.load_roles=[
         "scopes": [
             "read:users!user",
             "read:groups",
-            "access:services!service=forum"
+            "access:services!service=forum",
+            "access:services!service=idle_culler_warning",
             ]
     },
     {
@@ -215,7 +178,6 @@ c.JupyterHub.load_roles=[
         ],
         "services": ["jupyterhub-idle-culler-service"],
     },
-
     {
         "name": "dhbw-grader",
         "scopes": [
@@ -239,18 +201,7 @@ c.JupyterHub.services = [
         "command": [
             sys.executable,
             "-m", "jupyterhub_idle_culler",
-            "--timeout=240",
-        ],
-         "admin": True,
-    },
-
-    {
-        'name': 'forum',
-        'url': f'http://0.0.0.0:8010',
-        'command': [
-            sys.executable,
-            "-m", "jupyterhub_idle_culler",
-            "--timeout=240",
+            "--timeout=300",
         ],
          "admin": True,
     },
@@ -265,24 +216,30 @@ c.JupyterHub.services = [
             '--port',
             "8010",
         ],
+    },
+
+
+    {
+        'name': 'idle_culler_warning',
+        'url': f'http://0.0.0.0:8011',
+        'command': [
+            sys.executable,
+            "-m",
+            "idle_culler",
+            '--port',
+            "8011",
+        ],
     }
-
-
 ]
-"""
+
+"""                                                                                                                    
 --------------create collaborative workspaces and define the roles of group members-------------------------------------
 """
 
 dozent_scope = ["self"]
-gruppe_scope = []
-for i in [1,2,3,4,5,6,7,8,9,10]:
-
-    group_name = 'dhbw-gruppe' + str(int(i))
-    space_name = 'workspace_dhbw-gruppe' + str(int(i))
-    gruppe_scope.append("servers!user=" + space_name)
-
-    student_name = []
-    student_name = ['student'+ '0'*( 3 - len(str(j+1)) ) + str(j+1) for j in range( (i-1)*3, i*3 )]
+gruppe_scope = []                                                                                                       for i in [1,2,3,4,5,6,7,8,9,10]:
+                                                                                                                            group_name = 'dhbw-gruppe' + str(int(i))
+    space_name = 'workspace_dhbw-gruppe' + str(int(i))                                                                      gruppe_scope.append("servers!user=" + space_name)
 
     #c.JupyterHub.load_groups[group_name] = {'users':[space_name]+ student_name}
     c.JupyterHub.load_roles.append(
@@ -299,6 +256,7 @@ for i in [1,2,3,4,5,6,7,8,9,10]:
         "users": [space_name]
         }
     )
+
     dozent_scope.append("access:servers!user=" + space_name)
     dozent_scope.append("servers!user=" + space_name)
     dozent_scope.append("read:users!user=" + space_name)
@@ -321,20 +279,104 @@ c.JupyterHub.load_roles.append(
 )
 
 """
+---------------------------------Gruppe für Externe erstellen------------------------------------------------------
+"""
+#c.JupyterHub.load_groups["extern_group"] = {'users':[]}
+c.JupyterHub.load_roles.append(
+    {
+    "name": "externe-gruppe-mitglied",
+    "scopes": [
+        "access:servers!user=extern",
+        "servers!user=extern",
+        "read:users!user=extern",
+        "users:activity!user=extern",
+        "list:users!user=extern",
+    ],
+    "groups": ["extern_group"],
+    "users": ["extern"]
+    }
+)
+
+"""
+---------------------------------Add users to group automatically--------------------------------------------------
+"""
+
+async def add_user_to_groups(authenticator, handler, auth_model):
+
+
+    user = auth_model["name"]
+    group_names = ["dhbw-gruppe" + str(int(i)) for i in [1,2,3,4,5,6,7,8,9,10]]
+    db = handler.db
+    orm_user = db.query(orm.User).filter(orm.User.name == user).first()
+
+    # If the user does not exist in the database, handle the situation
+    if not orm_user:
+        handler.redirect("https://1985609f-7839-4819-8840-2d38548e4ea5.ma.bw-cloud-instance.org/first-login")
+        return auth_model
+
+    if user.startswith('shibboleth'):
+        for group_name in group_names:
+            group = db.query(orm.Group).filter(orm.Group.name == group_name).first()
+            if len(group.users) < 3:
+                avail_group =  group_name
+                break
+
+        scopes = handler.expanded_scopes
+        user_groups = set([g.name for g in orm_user.groups])
+
+        if len(set(group_names).intersection(user_groups)) == 0:
+            if len(user_groups.intersection(set(["dozent","admin"]))) == 0:
+                group.users.append(orm_user)
+                db.commit()
+                print(f"User '{user}' added to group '{group_name}'.")
+                return auth_model
+
+    if user.startswith('clerk'):
+        try:
+            clerkgroup = auth_model["groups"][0]["rolle"]
+            user_groups = [g.name for g in orm_user.groups]
+            if  clerkgroup not in user_groups:
+                group = db.query(orm.Group).filter(orm.Group.name == clerkgroup).first()
+                group.users.append(orm_user)
+                return auth_model
+        except:
+            user_groups = [g.name for g in orm_user.groups]
+            if len(user_groups) == 0:
+                group = db.query(orm.Group).filter(orm.Group.name == "extern_group").first()
+                group.users.append(orm_user)
+            return auth_model
+    return auth_model
+
+c.Authenticator.post_auth_hook = add_user_to_groups
+
+"""
 ---------------------------------mount nfs file and create presistant volume for users-----------------------------
 """
 def pre_spawn_hook(spawner):
     username = spawner.user.name  # get the username/collaborative account
     volume_path = os.path.join('/srv/ngshare/jupyterhub-user-volumes', username)
-
+    nb_cache = os.path.join(volume_path,'.nbgrader_cache')
     if not os.path.exists(volume_path):
         os.mkdir(volume_path, 0o755)
         os.chown(volume_path,1000,1000)
+
+    if not os.path.exists(nb_cache):
+        os.mkdir(nb_cache, 0o755)
+        os.chown(nb_cache,1000,1000)
 
     mounts = [
               {'type': 'bind',
                'source': '/opt/mount/jupyterhub-user-volumes/' + username,
                'target': '/home/jovyan/work'},
+
+              {'type': 'bind',
+               'source': '/opt/mount/jupyterhub-user-volumes/' + username + '/.nbgrader_cache',
+               'target': '/home/jovyan/.local/share/jupyter/nbgrader_cache'},
+
+              {'type': 'bind',
+               'source': '/opt/mount/DHBW-Kurs/videos',
+               'target': '/home/jovyan/videos',
+               'mode':'ro'},
 
               {'type': 'bind',
                'source': '/opt/mount/DHBW-Kurs/videos',
@@ -362,7 +404,11 @@ def pre_spawn_hook(spawner):
               ]
 
     if spawner.user.name=="grader":
-        spawner.extra_container_spec = {'mounts': mounts, "user": "root"}
+        spawner.extra_container_spec = {'mounts': mounts, "user":"root"}
+        #spawner.extra_create_kwargs = {
+        #                                      "user": "root" # Can also be an integer UID
+        #                                      }
+        #spawner.allow_privileged = True
     else:
         spawner.extra_container_spec = {'mounts': mounts[:-1]}
 
@@ -387,21 +433,23 @@ c.Spawner.mem_guarantee = "15G"
 c.SwarmSpawner.remove = False
 c.Spawner.extra_placement_spec = { "constraints": ["node.role == worker"] }
 c.ConfigurableHTTPProxy.debug = True
-c.Spawner.oauth_client_allowed_scopes = ["read:groups","read:users","read:roles","access:services!service=forum"]
+c.Spawner.oauth_client_allowed_scopes = ["read:groups","read:users","read:roles","access:services!service=forum","acces>
 
 
 def image_for_user(user):
     "Given a user, return the right image"
     groups = [group.name for group in user.groups]
     if user.name == "grader":
-        return "guyq1997/jupyterlab-dhbw:dozent"
+        return "guyq1997/jupyterlab-dhbw:dozent_no_clb"
     else:
         return "guyq1997/jupyterlab-dhbw:student"
 
 class MySwarmSpawner(SwarmSpawner):
+
+    def options_form(self, spawner):
+        return ""  # Return an empty string to disable the form
     def start(self):
         self.image = image_for_user(self.user)
-
         return super().start()
 
 c.JupyterHub.spawner_class = MySwarmSpawner
@@ -418,6 +466,9 @@ def default_url(handler):
     else:
         if 'admin-ui' in scopes:
             return '/jupyterhub/hub/user/grader/lab'
+
+        if "access:servers!user=extern" in scopes:
+            return '/jupyterhub/hub/user/extern/lab'
         else:
             scopes = handler.expanded_scopes
             workspace = list(gruppe_scope.intersection(scopes))
@@ -437,17 +488,16 @@ c.Authenticator.allow_all = True
 c.JupyterHub.shutdown_on_logout = True
 c.JupyterHub.authenticator_class = ShibbolethClerkAuthenticator
 c.ShibbolethClerkAuthenticator.allow_all = True
-c.ShibbolethClerkAuthenticator.client_id = 'fz3j7rVgoo3tlijz'
-#c.ShibbolethClerkAuthenticator.client_secret = 'sk_test_Eb65VOWxy4U3jOd7bTsV5xJrEUkleaPS7WNwV05RFS'
-c.ShibbolethClerkAuthenticator.oauth_callback_url = 'https://1985609f-7839-4819-8840-2d38548e4ea5.ma.bw-cloud-instance.org/jupyterhub/hub/oauth_callback'
+c.ShibbolethClerkAuthenticator.client_id = 'xxx'
+#c.ShibbolethClerkAuthenticator.client_secret = 'xxx'
+c.ShibbolethClerkAuthenticator.oauth_callback_url = 'https://example.org/jupyterhub/hub/oauth_callback"
 c.ShibbolethClerkAuthenticator.authorize_url = "https://tough-lemming-0.clerk.accounts.dev/oauth/authorize"
-c.ShibbolethClerkAuthenticator.token_url = "https://tough-lemming-0.clerk.accounts.dev/oauth/token"
+c.ShibbolethClerkAuthenticator.token_url = "https://tough-lemming-0.clerk.accounts.dev/oauth/token"                     
 c.ShibbolethClerkAuthenticator.userdata_url = "https://tough-lemming-0.clerk.accounts.dev/oauth/userinfo"
-c.ShibbolethClerkAuthenticator.scope = ["email", "profile", "public_metadata"]
+c.ShibbolethClerkAuthenticator.scope = ["email", "profile", "public_metadata"]                                          
 c.ShibbolethClerkAuthenticator.username_claim = "email"
-c.ShibbolethClerkAuthenticator.shibboleth_logout_url = "https://1985609f-7839-4819-8840-2d38548e4ea5.ma.bw-cloud-instance.org/Shibboleth.sso/Logout"
+c.ShibbolethClerkAuthenticator.shibboleth_logout_url = "https://example.org/Shibboleth.sso/Logout"
 c.JupyterHub.admin_access = True
-
 c.Authenticator.admin_users = {'clerk-yuqiang.gu@dhbw-stuttgart.de'}
 
 # Persist hub data on volume mounted inside container
@@ -459,6 +509,9 @@ c.JupyterHub.db_url = 'postgresql://postgres:{password}@{host}/{db}'.format(
     password=os.environ['POSTGRES_PASSWORD'],
     db=os.environ['POSTGRES_DB'],
 )
+c.Authenticator.delete_invalid_users = True
+c.JupyterHub.last_activity_interval = 120
+c.JupyterHub.tornado_settings = {"cookie_options": {"expires_days": 0.17}}
 ```
 
 ## Referecnces
