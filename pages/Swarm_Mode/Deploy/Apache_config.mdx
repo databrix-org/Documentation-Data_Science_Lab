@@ -94,3 +94,53 @@
 5. [Apache Konfiguration für bypassing Shibboleth Authentification](https://shibboleth.atlassian.net/wiki/spaces/SHIB2/pages/2577072327/NativeSPApacheConfig#NativeSPApacheConfig-AuthConfigOptions)
 6. [Apache Konfiguration für jupyter-collaboration extension](https://discourse.jupyter.org/t/cant-connect-to-kernel/24705/14)
 7. [Anleitung für Installation Apache mit Shibboleth](https://github.com/ConsortiumGARR/idem-tutorials/blob/master/idem-fedops/HOWTO-Shibboleth/Service%20Provider/Debian/HOWTO%20Install%20and%20Configure%20a%20Shibboleth%20SP%20v3.x%20on%20Debian-Ubuntu%20Linux.md)
+
+## Single Kurs app
+#----------------------static files-----------------------------
+  # Alias for Static Files
+  Alias /static/ /opt/SingleCourse/static_volume/
+  <Directory /opt/SingleCourse/static_volume>
+      Require all granted
+  </Directory>
+
+  # Alias for Media Files
+  Alias /data/ /opt/SingleCourse/data_volume/
+  <Directory /opt/SingleCourse/SingleCourseWebApp/data_volume>
+      Require all granted                                                                                            
+  </Directory>
+
+   <Location /course>
+    #AuthType shibboleth
+    #ShibRequestSetting requireSession 1
+    ShibUseHeaders On
+    RewriteEngine On
+    ProxyPreserveHost On
+
+    # Ensure trailing slash
+    # RewriteRule ^/$ /jupyter/ [R]
+
+    ProxyPass http://193.196.55.219:8008/course
+    ProxyPassReverse http://193.196.55.219:8008/course
+  </Location>
+
+  <Location />
+    AuthType shibboleth
+    ShibRequestSetting requireSession 1
+    require valid-user
+    RequestHeader set HTTP_MAIL %{mail}e env=mail
+    RequestHeader set HTTP_GIVENNAME %{givenName}e env=givenName
+    RequestHeader set HTTP_SN %{sn}e env=sn
+    RequestHeader set HTTP_UID %{uid}e env=uid
+  </Location>
+
+  <Location /admin>
+
+    ShibRequestSetting requireSession off
+    ShibUseHeaders On
+    RewriteEngine On
+    ProxyPreserveHost On
+
+
+    ProxyPass http://193.196.55.219:8008/admin
+    ProxyPassReverse http://193.196.55.219:8008/admin
+  </Location>

@@ -237,9 +237,12 @@ c.JupyterHub.services = [
 """
 
 dozent_scope = ["self"]
-gruppe_scope = []                                                                                                       for i in [1,2,3,4,5,6,7,8,9,10]:
-                                                                                                                            group_name = 'dhbw-gruppe' + str(int(i))
-    space_name = 'workspace_dhbw-gruppe' + str(int(i))                                                                      gruppe_scope.append("servers!user=" + space_name)
+gruppe_scope = []                                                                                                       
+for i in [1,2,3,4,5,6,7,8,9,10]:                                                                                 
+                                                                                                                         
+    group_name = 'dhbw-gruppe' + str(int(i))
+    space_name = 'workspace_dhbw-gruppe' + str(int(i))                                                                      
+    gruppe_scope.append("servers!user=" + space_name)
 
     #c.JupyterHub.load_groups[group_name] = {'users':[space_name]+ student_name}
     c.JupyterHub.load_roles.append(
